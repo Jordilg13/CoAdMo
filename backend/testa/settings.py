@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+from dotenv import load_dotenv
+load_dotenv(verbose=True)
 import os
 import ldap
 from django_auth_ldap.config import LDAPSearch, NestedActiveDirectoryGroupType
@@ -16,18 +18,18 @@ DEBUG = True
 
 
 # Binding and connection options
-AUTH_LDAP_SERVER_URI = "ldap://projectejordi.es:389"
-AUTH_LDAP_BIND_DN = "CN=Administrador,CN=Users,DC=projectejordi,DC=es"
-AUTH_LDAP_BIND_PASSWORD = "xxxx"
+AUTH_LDAP_SERVER_URI = os.getenv("LDAP_HOST")
+AUTH_LDAP_BIND_DN = os.getenv("LDAP_BIND_DN")
+AUTH_LDAP_BIND_PASSWORD = os.getenv("LDAP_PASSWORD")
 AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_DEBUG_LEVEL: 1,
     ldap.OPT_REFERRALS: 0,
 }
 
 # User and group search objects and types
-AUTH_LDAP_USER_SEARCH = LDAPSearch("CN=Users,DC=projectejordi,DC=es",
+AUTH_LDAP_USER_SEARCH = LDAPSearch(os.getenv("DOMAIN"),
                                    ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)")
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch("CN=Users,DC=projectejordi,DC=es",
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(os.getenv("DOMAIN"),
                                     ldap.SCOPE_SUBTREE, "(objectClass=group)")
 AUTH_LDAP_GROUP_TYPE = NestedActiveDirectoryGroupType()
 
@@ -158,7 +160,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
+# logging system to display stdout and stderr of ldap auth to console
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
