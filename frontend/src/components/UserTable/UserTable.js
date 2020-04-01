@@ -70,17 +70,17 @@ const columns_mobile = [
 ];
 
 const data = [
-    { id: 1, user: 'Rafa Llopis ', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge>, actions: <Button color="success">Desbloquear</Button> },
-    { id: 2, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
-    { id: 3, user: 'Rafa Llopis', pc: "pc-rlv" },
-    { id: 4, user: 'Rafa Llopis', pc: "pc-rlv" },
-    { id: 5, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
-    { id: 6, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="warning">Caducado</Badge>, actions: <Button color="success" disabled>Desbloquear</Button> },
-    { id: 7, user: 'Rafa Llopis', pc: "pc-rlv" },
-    { id: 8, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
-    { id: 9, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
-    { id: 10, user: 'Rafa Llopis', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
-    { id: 11, user: 'Rafa Llopis  ', pc: "pc-rlv", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 1, user: 'Jordi Llopis ', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge>, actions: <Button color="success">Desbloquear</Button> },
+    { id: 2, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 3, user: 'Jordi Llopis', pc: "pc-jordi" },
+    { id: 4, user: 'Jordi Llopis', pc: "pc-jordi" },
+    { id: 5, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 6, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="warning">Caducado</Badge>, actions: <Button color="success" disabled>Desbloquear</Button> },
+    { id: 7, user: 'Jordi Llopis', pc: "pc-jordi" },
+    { id: 8, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 9, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 10, user: 'Jordi Llopis', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
+    { id: 11, user: 'Jordi Llopis  ', pc: "pc-jordi", state: <Badge color="danger">Bloqueado</Badge> },
 ];
 
 
@@ -90,7 +90,7 @@ function Tablee() {
     return (
         <>
             {
-                !isTabletOrMobile ?
+                isTabletOrMobile ?
                     (
                         // <DataTable
                         //     title="Desbloquear"
@@ -100,12 +100,18 @@ function Tablee() {
                         // />
                         <Table>
                             <tr>
-                                <th>Usuario</th>
+                                <th>Desbloquear Usuario</th>
                             </tr>
                             <tr>
-                                <td><Button color="success" disabled>Desbloquear</Button></td>
+                                <td><Button color="success" >username1</Button></td>
                             </tr>
-                        // </Table>
+                            <tr>
+                                <td><Button color="success" >username2</Button></td>
+                            </tr>
+                            <tr>
+                                <td><Button color="success" disabled>username3</Button></td>
+                            </tr>
+                        </Table>
                         // <></>
                     ) : (
                         <DataTable

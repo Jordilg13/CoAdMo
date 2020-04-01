@@ -32,6 +32,7 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Wrong credentials, please try again.'
             )
+
         return {
             "username": str(user),
             "token": self._generate_jwt_token(user)
@@ -42,14 +43,12 @@ class LoginSerializer(serializers.Serializer):
         Generates a JSON Web Token that stores this user's ID and has an expiry
         date set to 7 hours into the future.
         """
-        dt = datetime.now() + timedelta(days=7)
         token = jwt.encode(
             {
                 'username': str(username),
-                'exp': int(dt.strftime('%S'))
+                'exp': datetime.utcnow() + timedelta(hours=7)
             },
             settings.SECRET_KEY,
             algorithm='HS256'
         )
-
         return token.decode('utf-8')

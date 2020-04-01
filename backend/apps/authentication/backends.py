@@ -1,8 +1,8 @@
 import jwt
 
 from django.conf import settings
-
 from rest_framework import authentication, exceptions
+from django.contrib.auth.models import User
 
 # from .models import User
 
@@ -31,7 +31,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
         handle the rest.
         """
         request.user = None
-        # print("--------------------------------------------------------backend")
+        print("--------------------------------------------------------backend")
+
         # `auth_header` should be an array with two elements: 1) the name of
         # the authentication header (in this case, "Token") and 2) the JWT
         # that we should authenticate against.
@@ -75,22 +76,21 @@ class JWTAuthentication(authentication.BaseAuthentication):
         successful, return the user and token. If not, throw an error.
         """
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
+            payload = jwt.decode(
+                token,
+                settings.SECRET_KEY,
+                algorithms=['HS256']
+            )
         except:
             msg = 'Invalid authentication. Could not decode token.'
             raise exceptions.AuthenticationFailed(msg)
 
-        print("--PAYLOAD--")
-        print(payload)
-
-        # try:
-        #     user = User.objects.get(pk=payload['id'])
-        # except User.DoesNotExist:
-        #     msg = 'No user matching this token was found.'
-        #     raise exceptions.AuthenticationFailed(msg)
-
-        # if not user.is_active:
-        #     msg = 'This user has been deactivated.'
-        #     raise exceptions.AuthenticationFailed(msg)
+        # print("--PAYLOAD--")
+        # print(payload)
+        try:
+            user = User.objects.get(username=payload['username'])
+        except User.DoesNotExist:
+            msg = 'No user matching this token was found.'
+            raise exceptions.AuthenticationFailed(msg)
 
         return (user, token)
