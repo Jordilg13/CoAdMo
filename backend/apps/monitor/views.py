@@ -1,33 +1,34 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from classes.BaseHost import BaseHost
 from classes.ActiveDirectory import ActiveDirectory
 import os
 
 
 class Host(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     allowed_parameters = [
-        "space_available", "ram_usage", "cpu_usage", "restart", "shutdown"]
+        "space_available", "ram_usage", "cpu_usage", "restart", "shutdown", "hardware_inventory", "software_inventory"]
 
     def get(self, request, hostname, parameter):
-        # new basehost with his monitor operations
-        host = BaseHost(hostname)
-        response = "Wrong parameter '%s'" % parameter
+        # checks if the parameter is allowed
+        if parameter not in self.allowed_parameters:
+            return Response("Wrong parameter '%s'" % parameter)
 
+        # new basehost with his monitor operations
+        host = BaseHost(request, hostname)
         # if host is down, dont check nothing
         if host.status == -1:
             return Response("Can't reach %s" % hostname)
 
-        # checks if the parameter is allowed
-        if parameter in self.allowed_parameters:
-            # execute the 
-            response = getattr(host, parameter)() 
-
+        # execute the function with the same name of the received parameter
+        # E.g. if cpu_usage is received, this returns the function named 'cpu_usage' of the 'host' instance
+        # then the response will be { "cpu_usage": host.cpu_usage() }
+        # resolving it, { "cpu_usage": "0" }
         response = {
-            parameter: response
+            parameter: getattr(host, parameter)()
         }
 
         return Response(response)

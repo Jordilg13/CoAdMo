@@ -1,4 +1,4 @@
-$password = ConvertTo-SecureString "xxxx" -AsPlainText -Force
+$password = ConvertTo-SecureString "xxxxx" -AsPlainText -Force
 $credential = new-object -typename System.Management.Automation.PSCredential -argumentlist "PROJECTEJORDI\Administrador",$password
 
 # CPU USAGE
