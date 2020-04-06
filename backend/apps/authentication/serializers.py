@@ -29,9 +29,9 @@ class LoginSerializer(serializers.Serializer):
             password=password,
         )
         if user is None:
-            raise serializers.ValidationError(
-                'Wrong credentials, please try again.'
-            )
+            raise serializers.ValidationError({
+                'error':'Invalid credentials, please try again.'
+            })
 
         return {
             "username": str(user),

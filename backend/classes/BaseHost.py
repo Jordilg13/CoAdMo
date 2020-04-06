@@ -29,21 +29,38 @@ class BaseHost():
 
     # SPACE
     def space_available(self):
-        command = "Get-WmiObject win32_logicaldisk -ComputerName {0} -Credential $credential | select deviceid,@{Name='Free';Expression={($_.FreeSpace*100)/$_.Size -as [int]}} | Write-Host".format(
-            self.hostname)
-        return self.ps.execute(command)
+        space = []
+        search_class = "win32_LogicalDisk"
+        props = ["Name", "FreeSpace", "Size"]
+        result = self.get_values(search_class, props, {"DriveType": "3"})
+
+        for index, i in enumerate(result):
+            space.append({})
+            space[index]["Name"] = result[index]['Name']
+            space[index]["GB"] = round(
+                int(i['FreeSpace'])/(1024**3))  # bytes to GB
+            space[index]["Percentage"] = round(
+                (int(i['FreeSpace'])*100)/int(i['Size']))  # percentage
+
+        return space
 
     # RAM
     def ram_usage(self):
-        # actually using % to format instead the built-in function because the '{}' of the command create errors
-        command = "Get-WmiObject -Credential $credential -ComputerName %s -Class win32_operatingsystem -ErrorAction Stop | select @{Name='ram_usage';Expression={[math]::Round(((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory)*100)/ $_.TotalVisibleMemorySize),2)}} | Write-Host" % self.hostname
-        return self.ps.execute(command)
+        search_class = "win32_operatingsystem"
+        props = ["TotalVisibleMemorySize", "FreePhysicalMemory"]
+        result = self.get_values(search_class, props)
+
+        return [{
+            "GB": round(int(result[0]['FreePhysicalMemory'])/(1024**3), 2),
+            "Percentage": round((int(result[0]['FreePhysicalMemory'])*100)/int(result[0]['TotalVisibleMemorySize']))
+        }]
 
     # CPU
     def cpu_usage(self):
-        # command = "(Get-WmiObject -ComputerName %s -Class win32_processor -ErrorAction Stop -Credential $credential | Measure-Object -Property LoadPercentage -Average | Select-Object Average).Average;" % self.hostname
-        command = "(Get-WmiObject -ComputerName {0} -Class win32_processor -ErrorAction Stop -Credential $credential | Measure-Object -Property LoadPercentage -Average | select Average | Write-Host)".format(self.hostname)
-        return self.ps.execute(command)
+        search_class = "win32_Processor"
+        props = ["LoadPercentage"]
+        result = self.get_values(search_class, props)
+        return result
 
     # UPDATES ?
 
@@ -57,7 +74,8 @@ class BaseHost():
         props = ["Name", "Model", "Manufacturer"]
         host = self.get_values(search_class, props)
         # environment variable
-        host[0]['oficina'] = self.conn.Win32_Environment(Name="oficina")[0].VariableValue
+        host[0]['oficina'] = self.conn.Win32_Environment(Name="oficina")[
+            0].VariableValue
 
         # -----------------------CPU-----------------------
         search_class = "Win32_Processor"
@@ -70,7 +88,7 @@ class BaseHost():
         # ---- RAM CAPACITY
         # converting bytes to GB (Bytes/1024^3)
         ram["Memory"] = round(int(self.conn.Win32_PhysicalMemory()[
-                            0].Capacity) / (1024**3),1)
+            0].Capacity) / (1024**3), 1)
         # ---- RAM SIMS
         ram["N_Sims"] = self.conn.win32_PhysicalMemoryArray()[0].MemoryDevices
 
@@ -81,7 +99,7 @@ class BaseHost():
         for i in disks:
             i["Size"] = round(int(i['Size'])/(1024**3))
             i["FreeSpace"] = round(int(i['FreeSpace'])/(1024**3))
-        
+
         # -----------------------BIOS----------------------**-
         search_class = "Win32_BIOS"
         props = ["Name", "Version", ]
@@ -152,10 +170,46 @@ class BaseHost():
         # -----------------------DRIVERS-----------------------
         search_class = "Win32_PnPSignedDriver"
         props = ["DeviceName", "Manufacturer", "DriverVersion"]
-        drivers = {i: getattr(getattr(self.conn, search_class)()[
-                              0], i) for i in props}
+        drivers = self.get_values(search_class, props)
+
+        # -----------------------PROGRAMS-----------------------
+        import winreg as wr
+
+        key_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+        target = "\\\\{}".format(self.hostname)
+        rem_reg = wr.ConnectRegistry(None, wr.HKEY_LOCAL_MACHINE)
+        rem_key = wr.OpenKey(rem_reg, key_path, 0,
+                             wr.KEY_READ | wr.KEY_WOW64_64KEY)
+        subkeys = []
+        index = 0
+        programs = []
+
+        # creating subkeys
+        while True:
+            try:
+                subkey = wr.EnumKey(rem_key, index)
+                subkeys.append(subkey)
+                index += 1
+            except EnvironmentError:
+                break
+
+        for sk in subkeys:
+            # print(sk)
+            programs.append({})
+            path = key_path+"\\"+sk
+            key = wr.OpenKey(rem_reg, path, 0,
+                             wr.KEY_READ | wr.KEY_WOW64_64KEY)
+            try:
+                programs[-1]['DisplayName'] = str(wr.QueryValueEx(key, 'DisplayName')[0])
+                programs[-1]['UninstallString'] = str(wr.QueryValueEx(key, 'UninstallString')[0])
+            except:
+                # print("Can't retrieve {}".format(sk))
+                programs.pop()
+
         return {
-            "drivers": drivers
+            "drivers": drivers,
+            "programs": programs,
+            # "test2": names,
         }
 
     ##### INTERACTIONS #####

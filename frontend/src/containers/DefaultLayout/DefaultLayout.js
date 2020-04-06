@@ -65,7 +65,7 @@ class DefaultLayout extends Component {
                     return route.component ? (
                       <Route
                         key={idx}
-                        path={route.path}
+                        exact path={route.path}
                         exact={route.exact}
                         name={route.name}
                         render={props => (

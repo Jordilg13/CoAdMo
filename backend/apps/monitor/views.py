@@ -15,7 +15,7 @@ class Host(APIView):
     def get(self, request, hostname, parameter):
         # checks if the parameter is allowed
         if parameter not in self.allowed_parameters:
-            return Response("Wrong parameter '%s'" % parameter)
+            return Response("Invalid parameter '%s'" % parameter)
 
         # new basehost with his monitor operations
         host = BaseHost(request, hostname)
@@ -42,7 +42,7 @@ class Users(APIView):
     def get(self, request, parameter):
         # new basehost with his monitor operations
         host = ActiveDirectory(os.getenv("LDAP_IP"))
-        response = "Wrong parameter '{0}'".format(parameter)
+        response = "Invalid parameter '{0}'".format(parameter)
 
         # if host is down, dont check nothing
         if host.status == -1:

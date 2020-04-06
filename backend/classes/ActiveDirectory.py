@@ -1,5 +1,8 @@
 from classes.BaseHost import BaseHost
 
+# GET computers from AD
+# Get-ADComputer -Filter * -SearchBase "DC=projectejordi,DC=es" -Credential $credential -Properties *
+
 
 class ActiveDirectory(BaseHost):
     def __init__(self, hostname):

@@ -1,8 +1,6 @@
 import sys
 import ldap
 import pprint
-print("----------------------------------------------------------------------------------------------------------------------------")
-
 DN = "CN=Administrador,CN=Users,DC=projectejordi,DC=es"
 secret = "xxxx"
 username = "bind"
