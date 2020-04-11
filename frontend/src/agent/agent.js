@@ -3,7 +3,7 @@ import _superagent from 'superagent';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = "http://192.168.1.107:8000";
+const API_ROOT = "http://192.168.1.13:8000";
 
 // const encode = encodeURIComponent;
 const responseBody = res => res.body;
@@ -26,6 +26,8 @@ const requests = {
 const Auth = {
     login: (username, password) =>
         requests.post("/login", { user: { username, password } }),
+    current: () =>
+        requests.get("/logged_user"),
 }
 
 const Host = {
@@ -35,5 +37,6 @@ const Host = {
 
 export default {
     Auth,
+    Host,
     setToken: _token => { token = _token; }
 }

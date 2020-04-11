@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import StateCard from '../StateCard/StateCard'
+import StateCard from '../../StateCard/StateCard'
 import { Row, Col } from 'reactstrap'
-import UserTable from '../UserTable/UserTable'
+import UserTable from '../../UserTable/UserTable'
 
 import DataTable from 'react-data-table-component';
 

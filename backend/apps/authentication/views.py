@@ -23,3 +23,8 @@ class LoginAPIView(APIView):
         print(serializer.validated_data)
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class LoggedUser(APIView):
+    def get(self, request):
+        return Response(request.user.username)

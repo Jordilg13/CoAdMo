@@ -4,8 +4,10 @@ import { Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle
 import PropTypes from 'prop-types';
 
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/brand/logo.svg'
-import sygnet from '../../assets/img/brand/sygnet.svg'
+import logo from '../../assets/img/brand/big_logo_coadmo.png'
+import sygnet from '../../assets/img/brand/small_logo_coadmo.png'
+import agent from "../../agent/agent"
+import { connect } from 'react-redux'
 
 const propTypes = {
   children: PropTypes.node,
@@ -13,9 +15,59 @@ const propTypes = {
 
 const defaultProps = {};
 
-class DefaultHeader extends Component {
-  render() {
 
+const mapStateToProps = state => ({ ...state });
+
+const mapDispatchToProps = dispatch => ({
+  logout: () =>
+    dispatch({ type: "LOGOUT" }),
+  loadToken: (token, payload) =>
+    dispatch({ type: "APP_LOAD", token, payload })
+});
+
+
+class DefaultHeader extends Component {
+  constructor(props) {
+    super(props)
+
+    this.signOut = e => {
+      e.preventDefault()
+      this.props.logout()
+      this.props.redirectTo("/login")
+    }
+
+    // load token from localstorage to the state
+    const token = window.localStorage.getItem("token");
+    if (token) agent.setToken(token)
+    this.props.loadToken(token, token ? agent.Auth.current() : null)
+  }
+
+  // returns the buton of login or the user's avatar and username if it's logged
+  UserStatus = () => {
+      if (this.props.auth.username) {
+        return <><NavItem className="d-md-down-none">
+          <NavLink to="#" className="nav-link">{this.props.auth.username}</NavLink>
+        </NavItem>
+          <UncontrolledDropdown nav direction="down">
+            <DropdownToggle nav>
+              <img src={`https://eu.ui-avatars.com/api/?name=${this.props.auth.username}&background=084fb9&color=fff&length=3&font-size=0.33`} className="img-avatar" alt="admin@bootstrapmaster.com" />
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem onClick={e => this.signOut(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown></>
+      } else {
+        return <NavItem className="px-3">
+          <NavLink to="/login" className="nav-link">Login</NavLink>
+        </NavItem>
+      }
+
+  }
+
+
+  render() {    
+    console.log(this.props);
+    
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 
@@ -40,37 +92,12 @@ class DefaultHeader extends Component {
           </NavItem>
         </Nav>
         <Nav className="ml-auto" navbar>
-          <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-bell"></i><Badge pill color="danger">5</Badge></NavLink>
-          </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-list"></i></NavLink>
-          </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-location-pin"></i></NavLink>
-          </NavItem>
-          <UncontrolledDropdown nav direction="down">
-            <DropdownToggle nav>
-              <img src={'../../assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
-              <DropdownItem><i className="fa fa-bell-o"></i> Updates<Badge color="info">42</Badge></DropdownItem>
-              <DropdownItem><i className="fa fa-envelope-o"></i> Messages<Badge color="success">42</Badge></DropdownItem>
-              <DropdownItem><i className="fa fa-tasks"></i> Tasks<Badge color="danger">42</Badge></DropdownItem>
-              <DropdownItem><i className="fa fa-comments"></i> Comments<Badge color="warning">42</Badge></DropdownItem>
-              <DropdownItem header tag="div" className="text-center"><strong>Settings</strong></DropdownItem>
-              <DropdownItem><i className="fa fa-user"></i> Profile</DropdownItem>
-              <DropdownItem><i className="fa fa-wrench"></i> Settings</DropdownItem>
-              <DropdownItem><i className="fa fa-usd"></i> Payments<Badge color="secondary">42</Badge></DropdownItem>
-              <DropdownItem><i className="fa fa-file"></i> Projects<Badge color="primary">42</Badge></DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem>
-              <DropdownItem onClick={e => this.props.onLogout(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
+          <this.UserStatus />
+          {/* {
+            this.props.auth.username ? <h4>{this.props.auth.username}</h4> : <h4>Not logged</h4>
+          } */}
         </Nav>
-        <AppAsideToggler className="d-md-down-none" />
+        {/* <AppAsideToggler className="d-md-down-none" /> */}
         {/*<AppAsideToggler className="d-lg-none" mobile />*/}
       </React.Fragment>
     );
@@ -80,4 +107,4 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
-export default DefaultHeader;
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultHeader);

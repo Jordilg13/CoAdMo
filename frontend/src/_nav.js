@@ -9,42 +9,49 @@ export default {
       //   text: 'NEW',
       // },
       children: [
+        
         {
           name: 'Principal',
           url: '/',
           icon: 'icon-puzzle',
         },
+        ,
         {
-          name: 'Comunicaciones',
-          url: '/comunicaciones',
-          icon: 'icon-puzzle',
-        }
-      ]
-    },
-    {
-      name: "Control Usuarios",
-      icon: "icon-speedometer",
-    },
-    {
-      name: "Control Hardware",
-      icon: "icon-speedometer",
-      children: [
-        {
-          name: 'Equipos',
-          url: '/ch/equipos',
+          name: 'Host',
+          url: '/host/192.168.1.150',
           icon: 'icon-puzzle',
         },
-        {
-          name: 'Impresoras',
-          url: '/ch/impresoras',
-          icon: 'icon-puzzle',
-        },
+        // {
+        //   name: 'Comunicaciones',
+        //   url: '/comunicaciones',
+        //   icon: 'icon-puzzle',
+        // }
       ]
     },
-    {
-      name: "Control Software",
-      icon: "icon-speedometer",
-    }
+    // {
+    //   name: "Control Usuarios",
+    //   icon: "icon-speedometer",
+    // },
+    // {
+    //   name: "Control Hardware",
+    //   icon: "icon-speedometer",
+    //   children: [
+    //     {
+    //       name: 'Equipos',
+    //       url: '/ch/equipos',
+    //       icon: 'icon-puzzle',
+    //     },
+    //     {
+    //       name: 'Impresoras',
+    //       url: '/ch/impresoras',
+    //       icon: 'icon-puzzle',
+    //     },
+    //   ]
+    // },
+    // {
+    //   name: "Control Software",
+    //   icon: "icon-speedometer",
+    // }
     // {
     //   title: true,
     //   name: 'Theme',

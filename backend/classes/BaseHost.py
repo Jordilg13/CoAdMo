@@ -84,13 +84,13 @@ class BaseHost():
         cpu = self.get_values(search_class, props)
 
         # -----------------------RAM-----------------------
-        ram = {}
+        ram = [{}]
         # ---- RAM CAPACITY
         # converting bytes to GB (Bytes/1024^3)
-        ram["Memory"] = round(int(self.conn.Win32_PhysicalMemory()[
+        ram[0]["Memory"] = round(int(self.conn.Win32_PhysicalMemory()[
             0].Capacity) / (1024**3), 1)
         # ---- RAM SIMS
-        ram["N_Sims"] = self.conn.win32_PhysicalMemoryArray()[0].MemoryDevices
+        ram[0]["N_Sims"] = self.conn.win32_PhysicalMemoryArray()[0].MemoryDevices
 
         # -----------------------DISKS-----------------------
         search_class = "win32_LogicalDisk"

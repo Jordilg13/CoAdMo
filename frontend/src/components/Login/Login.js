@@ -11,7 +11,7 @@ const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
   onSubmit: (email, password) =>
     dispatch({ type: LOGIN, payload: agent.Auth.login(email, password) }),
-    formErrors: () =>
+  formErrors: () =>
     dispatch({ type: "SET_ERRORS", payload: "Fields can't be blank" }),
 
 });
@@ -28,14 +28,8 @@ class Login extends Component {
     }
 
     this.submitForm = e => {
-      console.log(e);
       e.preventDefault();
-
-      if (this.state.username.length == 0 || this.state.password.length == 0) {
-        this.props.formErrors()
-      } else {
-        this.props.onSubmit(this.state.username, this.state.password)
-      }
+      this.props.onSubmit(this.state.username, this.state.password)
     }
 
     // save the actual value of the changing field in the state
