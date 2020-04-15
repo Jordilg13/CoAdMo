@@ -2,10 +2,21 @@ import React, { Component } from 'react'
 import StateCard from '../../StateCard/StateCard'
 import { Row, Col } from 'reactstrap'
 import UserTable from '../../UserTable/UserTable'
+import agent from "../../../agent/agent"
 
-import DataTable from 'react-data-table-component';
 
 export class Dashboard extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+             users:[]
+        }
+        agent.Users.getAll().then(users => {
+            this.setState({users})
+        })
+    }
+    
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
     render() {
         
@@ -59,7 +70,10 @@ export class Dashboard extends Component {
 
                 {/* <h4>Usuaris</h4> */}
                 {/* <Col xs="12" lg="12 "> */}
-                    <UserTable></UserTable>
+                    <UserTable 
+                    filtered_users={true}
+                    users={this.state.users}
+                    />
                 
                 {/* </Col> */}
 

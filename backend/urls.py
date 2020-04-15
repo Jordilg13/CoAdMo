@@ -22,5 +22,6 @@ urlpatterns = [
 
     # API URLS
     url('', include('apps.authentication.urls')),
-    url('', include('apps.monitor.urls')),
+    url('host/', include('apps.hosts.urls')),
+    url('', include('apps.users.urls')),
 ]

@@ -32,11 +32,17 @@ const Auth = {
 
 const Host = {
     get: (hostname,property) =>
-        requests.get(`/${hostname}/${property}`),
+        requests.get(`/host/${hostname}/${property}`),
+}
+
+const Users = {
+    getAll: () =>
+        requests.get("/users"),
 }
 
 export default {
     Auth,
     Host,
+    Users,
     setToken: _token => { token = _token; }
 }

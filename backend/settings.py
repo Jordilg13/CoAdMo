@@ -86,7 +86,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'apps.authentication',
-    'apps.monitor',
+    'apps.hosts',
+    'apps.users',
 
 ]
 

@@ -3,12 +3,17 @@ import React from 'react';
 const Dashboard = React.lazy(() => import("./components/Dashboards/Main/Dashboard"));
 const UsersDashboard = React.lazy(() => import("./components/Dashboards/Users/Dashboard"));
 const Host = React.lazy(() => import("./components/Host/Host"));
+const User = React.lazy(() => import("./components/User/User"));
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  // DASHBOARDS
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/users', name: 'Users', component: UsersDashboard },
-  { path: '/host/:hostname', name: 'Users', component: Host },
+  // HOST
+  { path: '/host/:hostname', name: 'Host', component: Host },
+  // USERS
+  { path: '/user/:username', name: 'Users', component: User },
 ];
 
 export default routes;
