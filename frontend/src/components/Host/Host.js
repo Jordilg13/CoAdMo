@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { connect } from 'react-redux'
 import DataTable from 'react-data-table-component';
 import agent from "../../agent/agent"
-import { ListGroup, ListGroupItem, Media, Spinner, Progress, Progre, Table } from 'reactstrap';
+import { ListGroup, ListGroupItem, Media, Spinner, Progress, Progre, Table, Badge } from 'reactstrap';
 import logo from "../../assets/img/computer.png"
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
@@ -23,53 +23,59 @@ const Host = (props) => {
     const [cpu, setCpu] = useState(false)
     const [ram, setRam] = useState(false)
     const [space, setSpace] = useState(false)
-    const [hardware, Sethardware] = useState(false)
-    const [software, setSoftware] = useState(false)
     const [tabs_info, setTabs_info] = useState(false)
+    const [isUp, setisUp] = useState(true)
     const hostname = props.match.params.hostname
     const isDesktop = useMediaQuery({ query: '(max-width: 991px)' })
+    const [errors, seterrors] = useState(false)
+
+    const dataToState = (data, category = false) => {
+        if (!data.error) {
+            // IF IS THE INVENTORY
+            if (!category) {
+                data = data[Object.keys(data)[0]]
+                Object.entries(data).map(([key, value]) => {
+                    setTabs_info(prevstate => { return { ...prevstate, [key]: value } })
+                })
+            } else { // IF IS A SINGLE ITEM LIKE CPU OR RAM
+                console.log(category);
+
+                eval(`set${category}(data)`)
+            }
+
+        } else {
+            setisUp(false)
+            seterrors(data.msg)
+
+        }
+    }
 
 
     const retrieveData = () => {
-        if (props.auth.isLogged && !isFetching) {
+        if (!isFetching) {
             console.log("RETRIEVING INFORMATION");
             // avoid to fetch again the information when rerendered, also avoiding an infinity loop
             setIsFetching(true)
 
             // Get CPU USAGE
             agent.Host.get(hostname, "cpu_usage")
-                .then((data) => { setCpu(data) })
+                .then((data) => { dataToState(data, "Cpu") })
 
             // Get SPACE AVAILABLE
             agent.Host.get(hostname, "space_available")
-                .then((data) => {
-                    data.space_available[1] = {
-                        "Name": "D:",
-                        "GB": 115,
-                        "Percentage": 30
-                    }; setSpace(data)
-                })
+                .then((data) => { dataToState(data, "Space") })
+
             // Get RAM usage
             agent.Host.get(hostname, "ram_usage")
-                .then((data) => { setRam(data) })
+                .then((data) => { dataToState(data, "Ram") })
+
             // Get HARDWARE INVENTORY
             agent.Host.get(hostname, "hardware_inventory")
-                .then((data) => {
-                    Sethardware(data);
-                    Object.entries(data.hardware_inventory).map(([key, value]) => {
-                        setTabs_info(prevstate => {return {...prevstate,[key]: value}})
-                    })
-                })
+                .then((data) => { dataToState(data) })
+
             // Get SOFTWARE INVENTORY
             agent.Host.get(hostname, "software_inventory")
-                .then((data) => {
-                    setSoftware(data)
-                    console.log(data);
-                    Object.entries(data.software_inventory).map(([key, value]) => {
-                        setTabs_info(prevstate => {return {...prevstate,[key]: value}})
-                    })
-                    // setTabs_info({ ...tabs_info })
-                })
+                .then((data) => { dataToState(data) })
 
         }
     }
@@ -84,7 +90,7 @@ const Host = (props) => {
 
     return (
         <div>
-            <h1>{hostname}</h1>
+            <h1>{hostname} {errors && `(${errors})`}</h1>
 
             <Row>
                 {/* display only in desktop browser, not in mobiles */}
@@ -98,7 +104,8 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">RAM</div>
                             {!ram ? (
-                                <div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
+
 
                             ) : (
                                     <Progress multi>
@@ -111,7 +118,7 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">CPU</div>
                             {!cpu ? (
-                                <div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
 
                             ) : (
                                     <Progress multi>
@@ -124,7 +131,7 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">SPACE</div>
                             {!space ? (
-                                <div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
 
                             ) : (
                                     space.space_available.map(disk => {
@@ -149,7 +156,7 @@ const Host = (props) => {
 
                     {/* NAV BAR OF TABS ------------------------------------------------------------------*/}
                     <Nav tabs>
-                        {hardware ? Object.keys(tabs_info).map((tabname, i) => {
+                        {tabs_info ? Object.keys(tabs_info).map((tabname, i) => {
                             return <NavItem key={i}>
                                 <NavLink
                                     className={classnames({ active: activeTab == i })}
@@ -157,7 +164,7 @@ const Host = (props) => {
                                     {tabname.charAt(0).toUpperCase() + tabname.slice(1)} {/* first uppercase letter */}
                                 </NavLink>
                             </NavItem>
-                        }) : <Spinner color="primary" size="sm" animation="border" role="status" />}
+                        }) : isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<></>)}
                     </Nav>
 
 
@@ -165,7 +172,7 @@ const Host = (props) => {
                     {/* CONTENT OF EACH TAB ------------------------------------------------------------------*/}
                     <TabContent activeTab={activeTab}>
                         {
-                            hardware ? Object.keys(tabs_info).map((tab, i) => {
+                            tabs_info ? Object.keys(tabs_info).map((tab, i) => {
                                 return (<TabPane tabId={i} key={tab}>
                                     <Row>
                                         <Col sm="12">
@@ -192,7 +199,7 @@ const Host = (props) => {
                                 </TabPane>)
                             })
                                 :
-                                <Spinner color="primary" size="sm" animation="border" role="status" />
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
                         }
 
 
@@ -202,6 +209,9 @@ const Host = (props) => {
 
         </div >
     )
+
+
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Host)

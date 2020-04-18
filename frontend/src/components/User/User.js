@@ -23,7 +23,7 @@ const User = (props) => {
                         <ListGroupItem><b>Nombre: </b>Jordi Llopis García </ListGroupItem>
                         <ListGroupItem><b>Usuario: </b>jllopis </ListGroupItem>
                         <ListGroupItem><b>Equipo: </b><a href="/host/192.168.1.150">192.168.1.150</a></ListGroupItem>
-                        <ListGroupItem><b>Último inicio sessión: </b>15/04/2020 17:06 </ListGroupItem>
+                        <ListGroupItem><b>Último inicio sesión: </b>15/04/2020 17:06 </ListGroupItem>
                         
 
                     </ListGroup>

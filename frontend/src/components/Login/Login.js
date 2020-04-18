@@ -24,7 +24,7 @@ class Login extends Component {
 
     this.state = {
       username: "",
-      password: ""
+      password: "",
     }
 
     this.submitForm = e => {

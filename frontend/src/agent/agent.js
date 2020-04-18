@@ -1,6 +1,8 @@
 import superagentPromise from 'superagent-promise';
 import _superagent from 'superagent';
 
+
+
 const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT = "http://192.168.1.13:8000";
@@ -16,11 +18,18 @@ const tokenPlugin = req => {
     }
 }
 
+// check if it returned 403 and redirect to the login if the user isn't logged in
+const chech403 = err => {
+    if (err.response.statusCode == 403) {
+        window.location.href = "/login"
+    }
+}
+
 const requests = {
     post: (url, body) =>
-        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody).catch(chech403),
     get: url =>
-        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
+        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody).catch(chech403),
 }
 
 const Auth = {

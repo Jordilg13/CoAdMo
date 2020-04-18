@@ -12,7 +12,7 @@ import time
 
 
 class AllUsers(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     # parameters allowed to filter the search
 
     def get(self, request):

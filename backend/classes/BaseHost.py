@@ -73,9 +73,12 @@ class BaseHost():
         search_class = "Win32_ComputerSystem"
         props = ["Name", "Model", "Manufacturer"]
         host = self.get_values(search_class, props)
-        # environment variable
-        host[0]['oficina'] = self.conn.Win32_Environment(Name="oficina")[
-            0].VariableValue
+        # environment variable (it could has this or not)
+        try:
+            host[0]['oficina'] = self.conn.Win32_Environment(Name="oficina")[
+                0].VariableValue
+        except:
+            pass
 
         # -----------------------CPU-----------------------
         search_class = "Win32_Processor"
@@ -90,7 +93,8 @@ class BaseHost():
         ram[0]["Memory"] = round(int(self.conn.Win32_PhysicalMemory()[
             0].Capacity) / (1024**3), 1)
         # ---- RAM SIMS
-        ram[0]["N_Sims"] = self.conn.win32_PhysicalMemoryArray()[0].MemoryDevices
+        ram[0]["N_Sims"] = self.conn.win32_PhysicalMemoryArray()[
+            0].MemoryDevices
 
         # -----------------------DISKS-----------------------
         search_class = "win32_LogicalDisk"
@@ -200,8 +204,10 @@ class BaseHost():
             key = wr.OpenKey(rem_reg, path, 0,
                              wr.KEY_READ | wr.KEY_WOW64_64KEY)
             try:
-                programs[-1]['DisplayName'] = str(wr.QueryValueEx(key, 'DisplayName')[0])
-                programs[-1]['UninstallString'] = str(wr.QueryValueEx(key, 'UninstallString')[0])
+                programs[-1]['DisplayName'] = str(
+                    wr.QueryValueEx(key, 'DisplayName')[0])
+                programs[-1]['UninstallString'] = str(
+                    wr.QueryValueEx(key, 'UninstallString')[0])
             except:
                 # print("Can't retrieve {}".format(sk))
                 programs.pop()
