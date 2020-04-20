@@ -65,7 +65,7 @@ class User(APIView):
             ad_user_info,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
 
         mixed_user_info = {
-            "ad": ad_user_info,
+            "ad": ad_user_info[0],
             # strip every field to remove extra spaces
             "db": {key:value.strip() if isinstance(value,str) else value for key,value in serializer.data.items() }
         }

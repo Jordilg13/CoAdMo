@@ -47,6 +47,8 @@ const Host = {
 const Users = {
     getAll: () =>
         requests.get("/users"),
+    get: username => 
+        requests.get(`/user/${username}`),
 }
 
 export default {

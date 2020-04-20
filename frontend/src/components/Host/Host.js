@@ -104,7 +104,7 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">RAM</div>
                             {!ram ? (
-                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
 
 
                             ) : (
@@ -118,7 +118,7 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">CPU</div>
                             {!cpu ? (
-                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
 
                             ) : (
                                     <Progress multi>
@@ -131,7 +131,7 @@ const Host = (props) => {
                         <ListGroupItem>
                             <div className="text-center font-weight-bold">SPACE</div>
                             {!space ? (
-                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
 
                             ) : (
                                     space.space_available.map(disk => {
@@ -164,7 +164,7 @@ const Host = (props) => {
                                     {tabname.charAt(0).toUpperCase() + tabname.slice(1)} {/* first uppercase letter */}
                                 </NavLink>
                             </NavItem>
-                        }) : isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<></>)}
+                        }) : isUp ? (<div className="text-center"><Spinner color="primary" size="sm" /></div>) : (<></>)}
                     </Nav>
 
 
@@ -199,7 +199,7 @@ const Host = (props) => {
                                 </TabPane>)
                             })
                                 :
-                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" animation="border" role="status" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
+                                isUp ? (<div className="text-center"><Spinner color="primary" size="sm" /></div>) : (<div className="text-center"><Badge color="danger">X</Badge></div>)
                         }
 
 

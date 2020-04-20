@@ -1,12 +1,23 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Media, ListGroup, ListGroupItem } from "reactstrap"
+import { Row, Col, Media, ListGroup, ListGroupItem, Spinner } from "reactstrap"
 import { useMediaQuery } from 'react-responsive'
 import logo from "../../assets/img/default-avatar.png"
+import agent from "../../agent/agent"
 
 const User = (props) => {
-    const username = props.match.params.username
+    const username = props.match.params.username;
     const isDesktop = useMediaQuery({ query: '(max-width: 991px)' })
+
+    const [userInfo, setUserInfo] = useState(false)
+    const [isFetching, setIsFetching] = useState(false)
+
+    useEffect(() => {
+        agent.Users.get(username).then(data => {
+            console.log(data);
+            setUserInfo(data)
+        })
+    }, [])
 
     return (
         <div>
@@ -16,21 +27,68 @@ const User = (props) => {
                     <Media className="img-fluid" src={logo} alt="Computer logo" />
                 </Col>}
                 <Col>
-                    <h1>Jordi Llopis García</h1>
-                    {/* <h5 className="text-muted">jllopis</h5> */}
-                    <a href="mailto:jordillopis00@gmail.com">jordillopis00@gmail.com</a>
-                    <ListGroup flush>
-                        <ListGroupItem><b>Nombre: </b>Jordi Llopis García </ListGroupItem>
-                        <ListGroupItem><b>Usuario: </b>jllopis </ListGroupItem>
-                        <ListGroupItem><b>Equipo: </b><a href="/host/192.168.1.150">192.168.1.150</a></ListGroupItem>
-                        <ListGroupItem><b>Último inicio sesión: </b>15/04/2020 17:06 </ListGroupItem>
-                        
-
-                    </ListGroup>
-
+                    <h1>
+                        {userInfo ? (userInfo.db.nombre) : (
+                            <Spinner color="primary" size="sm" />
+                        )}
+                    </h1>
+                    {userInfo ? (<a href={`mailto:${userInfo.db.mailpuesto}`}>{userInfo.db.mailpuesto}</a>) : (
+                        <Spinner color="primary" size="sm" />
+                    )}
 
                 </Col>
+            </Row>
+            <br />
+            <Row>
+                <Col>
+                    <Row>
+                        <Col>
+                            {/* PERSON INFO */}
+                            <ListGroup flush>
+                                <ListGroupItem><b>Usuario: </b>{userInfo ? (userInfo.ad.sAMAccountName) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Nº Empleado: </b>{userInfo ? (userInfo.db.numero) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Email personal: </b>{userInfo ? (<a href={`mailto:${userInfo.db.mailpersonal}`}>{userInfo.db.mailpersonal}</a>) : (
+                                    <Spinner color="primary" size="sm" />
+                                )} </ListGroupItem>
 
+                            </ListGroup>
+                        </Col>
+                        <Col>
+                            {/* WHERE AND WHEN THE USER LOGGED IN LAST TIME */}
+                            <ListGroup flush>
+                                <ListGroupItem><b>Equipo: </b>{userInfo ? (<a href={`/host/${userInfo.db.equipo}`}>{userInfo.db.equipo}</a>) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Último inicio sesión: </b>{userInfo ? (userInfo.db.aperturapuesto.replace("T", " ")) : (
+                                    <Spinner color="primary" size="sm" />
+                                )} </ListGroupItem>
+
+                            </ListGroup>
+                        </Col>
+                        <Col>
+                            <ListGroup flush>
+                                <ListGroupItem><b>Oficina: </b>{userInfo ? (userInfo.db.nomofi) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Población: </b>{userInfo ? (userInfo.db.nompobl) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Ubicación: </b>{userInfo ? (userInfo.db.ubicacion) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+                                <ListGroupItem><b>Departamento: </b>{userInfo ? (userInfo.db.department) : (
+                                    <Spinner color="primary" size="sm" />
+                                )}</ListGroupItem>
+
+                            </ListGroup>
+                        </Col>
+                    </Row>
+
+                </Col>
             </Row>
         </div>
     )

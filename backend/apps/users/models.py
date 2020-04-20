@@ -14,7 +14,8 @@ class Users(models.Model):
     nompobl = models.CharField(db_column='NOMPOBL', max_length=20, blank=True, null=True)
     ubicacion = models.CharField(max_length=4000, blank=True, null=True)
     department = models.CharField(max_length=4000, blank=True, null=True)
+    foto = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'v_empleados'
+        db_table = 'empleadoss'
