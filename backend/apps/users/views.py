@@ -1,14 +1,20 @@
-from django.shortcuts import render
-from classes.ActiveDirectory import ActiveDirectory
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from classes.ActiveDirectory import ActiveDirectory
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import os
-import pprint
+from django.shortcuts import render
+from rest_framework import generics
+import apps.users.ADutils as utils
+from .serializers import UserSerializer
+from .models import Users
 import datetime
+import pprint
 import time
+import os
 
 # Create your views here.
+
+
 class AllUsers(APIView):
     permission_classes = (IsAuthenticated,)
     # parameters allowed to filter the search
@@ -26,41 +32,46 @@ class AllUsers(APIView):
         users = host.execute_query(query_filter, attrs)
 
         # change to a proper format
-        users = [i[1] for i in users]
-        for i in users:
-            for j in i:
-                i[j] = i[j][0].decode("utf-8")
+        users = utils.format_data(users)
 
         # mark users with custom flags
-        for i in users:
-            # BLOCKED USERS
-            try:
-                if i['lockoutTime'] != "0":
-                    i['isBlocked'] = True
-            except:
-                pass
-
-            i['pwdLastSet'] = self.ad_timestamp(int(i['pwdLastSet']))
-
-            # USERS WITH EXPIRED PASSWORDS
-            exp_date = i['pwdLastSet'] + host.PASSWORD_EXPIRATION_DATE.total_seconds()
-            today = datetime.datetime.today().timestamp()
-            
-            # try:
-            if i['pwdLastSet'] != 0 and i['accountExpires'] != "0" and today > exp_date:
-                i['isExpired'] = True
-            # except:
-            #     pass
+        users = utils.set_flags(
+            users,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
 
         return Response(users)
 
-    def ad_timestamp(self, timest):
-        """
-        Convert the format of the active directory returned dates to a Date
-        """
-        if timest != 0 and timest != 9223372036854775807: # if never expires
-            return (datetime.datetime(1601, 1, 1) + datetime.timedelta(seconds=timest/10000000)).timestamp()
-        return 0
+
+class User(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, username):
+        serializer = UserSerializer(Users.objects.get(usuario=username))
+        host = ActiveDirectory()
+
+        # all that matches with the filter
+        query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
+            username)
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime"]  # return the attributes that matches with the given arguments
+
+        # execute the query
+        ad_user_info = host.execute_query(query_filter, attrs)
+
+        # change to a proper format
+        ad_user_info = utils.format_data(ad_user_info)
+
+        # mark ad_user_info with custom flags
+        ad_user_info = utils.set_flags(
+            ad_user_info,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
+
+        mixed_user_info = {
+            "ad": ad_user_info,
+            # strip every field to remove extra spaces
+            "db": {key:value.strip() if isinstance(value,str) else value for key,value in serializer.data.items() }
+        }
+        
+        return Response(mixed_user_info)
+
 
 
 # class Users(APIView):
