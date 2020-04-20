@@ -44,7 +44,7 @@ export class Dashboard extends Component {
         return (
             <div>
                 <Row>
-                    <Col xs="12" sm="6" lg="6">
+                    <Col xs="6" sm="6" lg="6">
                         <StateCard
                             name="Bloqueados"
                             description={this.state.counted_users.count_blocked_users}
@@ -52,7 +52,7 @@ export class Dashboard extends Component {
                             po_desc=""
                         />
                     </Col>
-                    <Col xs="12" sm="6" lg="6">
+                    <Col xs="6" sm="6" lg="6">
                         <StateCard
                             name="Cacucados"
                             description={this.state.counted_users.count_expired_users}

@@ -90,7 +90,7 @@ const Host = (props) => {
 
     return (
         <div>
-            <h1>{hostname} {errors && `(${errors})`}</h1>
+            <h1 style={{"display": "inline"}}>{hostname}</h1> {errors && <Badge color="danger">{errors}</Badge>}
 
             <Row>
                 {/* display only in desktop browser, not in mobiles */}

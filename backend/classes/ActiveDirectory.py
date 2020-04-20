@@ -2,6 +2,7 @@ from classes.BaseHost import BaseHost
 import ldap
 import sys
 import os
+import datetime
 
 # GET computers from AD
 # Get-ADComputer -Filter * -SearchBase "DC=projectejordi,DC=es" -Credential $credential -Properties *
@@ -13,6 +14,7 @@ class ActiveDirectory(BaseHost):
         self.conn = self.setup()
         self.base = os.getenv("DOMAIN")
         self.scope = ldap.SCOPE_SUBTREE
+        self.PASSWORD_EXPIRATION_DATE = datetime.timedelta(days=45)
 
     def setup(self):
         # GETTING VARIABLES
