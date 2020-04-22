@@ -8,7 +8,7 @@ const superagent = superagentPromise(_superagent, global.Promise);
 const API_ROOT = "http://192.168.1.13:8000";
 
 // const encode = encodeURIComponent;
-const responseBody = res => res.body;
+const responseBody = res => res.body
 
 let token = null;
 const tokenPlugin = req => {
@@ -18,18 +18,14 @@ const tokenPlugin = req => {
     }
 }
 
-// check if it returned 403 and redirect to the login if the user isn't logged in
-const chech403 = err => {
-    if (err.response.statusCode == 403) {
-        window.location.href = "/login"
-    }
-}
 
 const requests = {
     post: (url, body) =>
-        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody).catch(chech403),
+        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+    delete: (url, body) =>
+        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
     get: url =>
-        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody).catch(chech403),
+        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
 }
 
 const Auth = {
@@ -40,15 +36,17 @@ const Auth = {
 }
 
 const Host = {
-    get: (hostname,property) =>
+    get: (hostname, property) =>
         requests.get(`/host/${hostname}/${property}`),
 }
 
 const Users = {
     getAll: () =>
         requests.get("/users"),
-    get: username => 
+    get: username =>
         requests.get(`/user/${username}`),
+    create: data =>
+        requests.post(`/user/create/${data['SamAccountName']}`, { data: data })
 }
 
 export default {

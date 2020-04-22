@@ -1,5 +1,6 @@
 {
     "python.pythonPath": "venv\\Scripts\\python.exe",
     "git.ignoreLimitWarning": true,
-    "discord.enabled": true
+    "discord.enabled": true,
+    "python.linting.enabled": true
 }

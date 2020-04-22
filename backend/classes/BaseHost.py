@@ -1,7 +1,6 @@
 from pythonping import ping
 import os
 import wmi
-from pypsexec.client import Client
 from django.contrib.auth import get_user
 import pythoncom
 
@@ -14,7 +13,7 @@ class BaseHost():
 
     def connection(self, request):
         pythoncom.CoInitialize()
-        return wmi.WMI(self.hostname, user=r"Administrador", password=os.getenv("LDAP_PASSWORD"))
+        return wmi.WMI(self.hostname, user=os.getenv("LDAP_ADMIN"), password=os.getenv("LDAP_PASSWORD"))
 
     ##### MONITORING #####
 

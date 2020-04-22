@@ -26,9 +26,9 @@ def set_flags(users, expiration_time):
     Set flags to users. 
     Marks are 'isExpired' and 'isBlocked'
     """
-
     for i in users:
         # BLOCKED USERS
+        
         try:
             if i['lockoutTime'] != "0":
                 i['isBlocked'] = True
@@ -44,4 +44,4 @@ def set_flags(users, expiration_time):
         if i['pwdLastSet'] != 0 and i['accountExpires'] != "0" and today > exp_date:
             i['isExpired'] = True
 
-        return users
+    return users

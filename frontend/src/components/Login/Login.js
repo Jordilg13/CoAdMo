@@ -11,9 +11,6 @@ const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
   onSubmit: (email, password) =>
     dispatch({ type: LOGIN, payload: agent.Auth.login(email, password) }),
-  formErrors: () =>
-    dispatch({ type: "SET_ERRORS", payload: "Fields can't be blank" }),
-
 });
 
 
@@ -33,7 +30,7 @@ class Login extends Component {
     }
 
     // save the actual value of the changing field in the state
-    this.handleChange = e => {      
+    this.handleChange = e => {
       const { name, value } = e.target;
       this.setState({ [name]: value });
     };
@@ -51,7 +48,7 @@ class Login extends Component {
                     <Form onSubmit={this.submitForm}>
                       <h1>Login</h1>
                       <p className="text-muted">Sign In to your account</p>
-                      <h5 className="text-danger">{this.props.errors}</h5>
+                      <h5 className="text-danger">{this.props.errors ? this.props.errors.error : null}</h5>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>

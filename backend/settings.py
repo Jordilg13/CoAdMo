@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.hosts',
     'apps.users',
+    'apps.core',
 
 ]
 

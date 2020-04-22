@@ -6,9 +6,12 @@ from django.shortcuts import render
 from rest_framework import generics
 import apps.users.ADutils as utils
 from .serializers import UserSerializer
+from apps.core.models import Logs
+from apps.core.serializers import LogsSerializer
 from .models import Users
 import datetime
 import pprint
+import ldap
 import time
 import os
 
@@ -29,7 +32,7 @@ class AllUsers(APIView):
                  "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime"]  # return the attributes that matches with the given arguments
 
         # execute the query
-        users = host.execute_query(query_filter, attrs)
+        users = host.search(query_filter, attrs)
 
         # change to a proper format
         users = utils.format_data(users)
@@ -38,6 +41,7 @@ class AllUsers(APIView):
         users = utils.set_flags(
             users,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
 
+        host.conn.unbind_s()
         return Response(users)
 
 
@@ -45,8 +49,21 @@ class User(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, username):
-        serializer = UserSerializer(Users.objects.get(usuario=username))
+        result_data = {
+            "ad": {},
+            "db": {},
+            "errors": False,
+            "errors_in": []
+        }
+        try:
+            serializer = UserSerializer(Users.objects.get(usuario=username))
+        except Users.DoesNotExist as err:
+            serializer = UserSerializer()
+            result_data['errors'] = True
+            result_data['errors_in'].append("base de datos")
+
         host = ActiveDirectory()
+        print(username)
 
         # all that matches with the filter
         query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
@@ -55,7 +72,7 @@ class User(APIView):
                  "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime"]  # return the attributes that matches with the given arguments
 
         # execute the query
-        ad_user_info = host.execute_query(query_filter, attrs)
+        ad_user_info = host.search(query_filter, attrs)
 
         # change to a proper format
         ad_user_info = utils.format_data(ad_user_info)
@@ -64,15 +81,52 @@ class User(APIView):
         ad_user_info = utils.set_flags(
             ad_user_info,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
 
-        mixed_user_info = {
-            "ad": ad_user_info[0],
-            # strip every field to remove extra spaces
-            "db": {key:value.strip() if isinstance(value,str) else value for key,value in serializer.data.items() }
-        }
+        if len(ad_user_info) == 0:
+            result_data['errors'] = True
+            result_data['errors_in'].append("active directory")
+        else:
+            result_data["ad"] = ad_user_info[0]
+
+        # Process data
+        result_data['db'].update({key: value.strip() if isinstance(
+            value, str) else value for key, value in serializer.data.items()})
+
+        host.conn.unbind_s()
+        return Response(result_data)
+
+
+class UnlockUser(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, username):
+        host = ActiveDirectory()
+        result = host.modify(username, {"lockoutTime":"0"})
+        host.conn.unbind_s()
+
+        savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
+                       justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
+        savelog.save()  # save log in the db
+
+        return Response(result)
+
+
+class CreateUser(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, username):
+        host = ActiveDirectory()
+        reponse = host.create_user(username, request.data['data'])
+        host.conn.unbind_s()
+        return Response(reponse)
+
+
+class DeleteUser(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, username):
+        host = ActiveDirectory()
         
-        return Response(mixed_user_info)
-
-
+        return Response(host.deleteUser(username))
 
 # class Users(APIView):
 #     permission_classes = (IsAuthenticated,)
@@ -93,7 +147,7 @@ class User(APIView):
 #             if parameter == "locked":
 #                 query_filter = "(&(objectClass=user)(lockoutTime>=1))"
 #                 attrs = ["cn"]
-#                 response = host.execute_query(query_filter, attrs)
+#                 response = host.search(query_filter, attrs)
 #             elif parameter == "expired":
 #                 expiration_date = 3888000  # the expiration time is 45 days
 
@@ -101,7 +155,7 @@ class User(APIView):
 #                     expiration_date)
 #                 attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet",
 #                          "sAMAccountName", "userAccountControl", "userPrincipalName", "whenChanged", "whenCreated"]
-#                 response = host.execute_query(query_filter, attrs)
+#                 response = host.search(query_filter, attrs)
 #                 response = [i[1]
 #                             for i in response if i[1]['pwdLastSet'][0] is "0"]
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Media, ListGroup, ListGroupItem, Spinner } from "reactstrap"
+import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Button } from "reactstrap"
 import { useMediaQuery } from 'react-responsive'
 import logo from "../../assets/img/default-avatar.png"
 import agent from "../../agent/agent"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 const User = (props) => {
     const username = props.match.params.username;
@@ -11,6 +13,7 @@ const User = (props) => {
 
     const [userInfo, setUserInfo] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
+    const [tooltipOpen, settooltipOpen] = useState(false)
 
     useEffect(() => {
         agent.Users.get(username).then(data => {
@@ -27,11 +30,24 @@ const User = (props) => {
                     <Media className="img-fluid" src={logo} alt="Computer logo" />
                 </Col>}
                 <Col>
-                    <h1>
-                        {userInfo ? (userInfo.db.nombre) : (
+                    <h1 style={{ "display": "inline" }}>
+                        {userInfo ? userInfo.db.nombre : (
                             <Spinner color="primary" size="sm" />
                         )}
                     </h1>
+                    {
+                        userInfo.errors && (<>
+                            <FontAwesomeIcon size="lg" id={'Tooltip-1'} icon={faExclamationTriangle} />
+                            <Tooltip placement="bottom" isOpen={tooltipOpen} target={'Tooltip-1'} toggle={() => settooltipOpen(!tooltipOpen)}>
+                                {
+                                    userInfo.errors_in.map((err, i) => {
+                                        return <p>{`No se ha encontrado el usuario en '${err}'`}</p>
+                                    })
+                                }
+                            </Tooltip>
+                        </>)
+                    }
+                    <br />
                     {userInfo ? (<a href={`mailto:${userInfo.db.mailpuesto}`}>{userInfo.db.mailpuesto}</a>) : (
                         <Spinner color="primary" size="sm" />
                     )}
@@ -63,7 +79,7 @@ const User = (props) => {
                                 <ListGroupItem><b>Equipo: </b>{userInfo ? (<a href={`/host/${userInfo.db.equipo}`}>{userInfo.db.equipo}</a>) : (
                                     <Spinner color="primary" size="sm" />
                                 )}</ListGroupItem>
-                                <ListGroupItem><b>Último inicio sesión: </b>{userInfo ? (userInfo.db.aperturapuesto.replace("T", " ")) : (
+                                <ListGroupItem><b>Último inicio sesión: </b>{userInfo ? (userInfo.db.aperturapuesto && userInfo.db.aperturapuesto.replace("T", " ")) : (
                                     <Spinner color="primary" size="sm" />
                                 )} </ListGroupItem>
 
