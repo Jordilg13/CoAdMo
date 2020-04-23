@@ -12,7 +12,7 @@ import { UnlockUser } from '../User/actions/UnlockUser';
 // DATATABE
 import { customSort, columns } from "./utils"
 import { DeleteUser } from '../User/actions/DeleteUser';
-import { EditUser } from '../User/actions/EditUser';
+import { UserForm } from '../User/actions/UserForm';
 
 
 
@@ -24,9 +24,7 @@ function Tablee(props) {
     const [modal, setModal] = useState(false);
     const [showPassword, setshowPassword] = useState(false)
     const toggle = () => setModal(!modal);
-    const {
-        className
-    } = props;
+
 
     // componentdidmount like behavior
     useEffect(() => {
@@ -37,8 +35,8 @@ function Tablee(props) {
             let status = ""
             let actions = (
                 <ButtonGroup>
-                    <EditUser />
-                    <DeleteUser />
+                    <UserForm action="update" user={user} />
+                    <DeleteUser user={user} />
                 </ButtonGroup>)
 
             // adds the flags
@@ -47,9 +45,9 @@ function Tablee(props) {
 
             actions = user.isBlocked ? (
                 <ButtonGroup>
-                    <UnlockUser user={user}/>
-                    <EditUser user={user}/>
-                    <DeleteUser user={user}/>
+                    <UnlockUser user={user} />
+                    <UserForm action="update" user={user} />
+                    <DeleteUser user={user} />
                 </ButtonGroup>) : actions
             if (props.filtered_users) {
                 if (status != "") {
@@ -68,7 +66,8 @@ function Tablee(props) {
                     id: index,
                     user: <a href={`/user/${user.sAMAccountName}`}>{user.sAMAccountName}</a>,
                     status: status,
-                    actions: actions
+                    actions: actions,
+                    number: user.employeeNumber
                 })
             }
             // updates the state with the fformatted data
@@ -97,13 +96,7 @@ function Tablee(props) {
         return (
             // SUBHEADER OF THE DATATABLE (search bar and add user btn)
             <>
-                <Button
-                    color="secondary"
-                    style={{ position: "absolute", top: "-40px" }}
-                    onClick={toggle}
-                >
-                    <FontAwesomeIcon icon={faUserPlus} />
-                </Button>
+                <UserForm action="create" />
                 <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
             </>);
     }, [filterText, resetPaginationToggle]);
@@ -118,7 +111,7 @@ function Tablee(props) {
             <CreateUser
                 modal={modal}
                 toggle={toggle}
-                classes={className}
+                classes={props}
                 showPassword={showPassword}
                 ssp={setshowPassword} />
             {

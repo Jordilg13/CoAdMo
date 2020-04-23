@@ -23,7 +23,9 @@ const requests = {
     post: (url, body) =>
         superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
     delete: (url, body) =>
-        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+        superagent.del(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
+    update: (url, body) =>
+        superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
     get: url =>
         superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
 }
@@ -45,8 +47,10 @@ const Users = {
         requests.get("/users"),
     get: username =>
         requests.get(`/user/${username}`),
-    create: data =>
-        requests.post(`/user/create/${data['SamAccountName']}`, { data: data })
+    create: (username,data) =>
+        requests.post(`/user/create/${username}`, { data: data }),
+    update: (username,data) =>
+        requests.update(`/user/update/${username}`, { data: data })
 }
 
 export default {

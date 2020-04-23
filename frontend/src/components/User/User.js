@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Button } from "reactstrap"
+import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Button, Badge, UncontrolledAlert  } from "reactstrap"
 import { useMediaQuery } from 'react-responsive'
 import logo from "../../assets/img/default-avatar.png"
 import agent from "../../agent/agent"
@@ -24,10 +24,21 @@ const User = (props) => {
 
     return (
         <div>
+            {/* <UncontrolledAlert  style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                zIndex: "2000"
+            }} color="danger">
+                I am an alert and I can be dismissed!
+    </UncontrolledAlert> */}
 
             <Row>
                 {!isDesktop && <Col xs="12" sm="6" lg="3">
-                    <Media className="img-fluid" src={logo} alt="Computer logo" />
+                    <Media
+                        className="img-fluid rounded mx-auto d-block"
+                        src={userInfo && userInfo.db.foto ? "data:image/png;base64," + userInfo.db.foto : logo}
+                        alt="User Image" />
                 </Col>}
                 <Col>
                     <h1 style={{ "display": "inline" }}>
@@ -37,20 +48,25 @@ const User = (props) => {
                     </h1>
                     {
                         userInfo.errors && (<>
-                            <FontAwesomeIcon size="lg" id={'Tooltip-1'} icon={faExclamationTriangle} />
-                            <Tooltip placement="bottom" isOpen={tooltipOpen} target={'Tooltip-1'} toggle={() => settooltipOpen(!tooltipOpen)}>
-                                {
-                                    userInfo.errors_in.map((err, i) => {
-                                        return <p>{`No se ha encontrado el usuario en '${err}'`}</p>
-                                    })
-                                }
-                            </Tooltip>
+                            <Badge color="danger" size="lg">
+                                <FontAwesomeIcon size="lg" id={'Tooltip-1'} icon={faExclamationTriangle} />
+                                <Tooltip placement="bottom" isOpen={tooltipOpen} target={'Tooltip-1'} toggle={() => settooltipOpen(!tooltipOpen)}>
+                                    {
+                                        userInfo.errors_in.map((err, i) => {
+                                            return <p>{`No se ha encontrado el usuario en '${err}'`}</p>
+                                        })
+                                    }
+                                </Tooltip>
+                            </Badge>
                         </>)
                     }
-                    <br />
-                    {userInfo ? (<a href={`mailto:${userInfo.db.mailpuesto}`}>{userInfo.db.mailpuesto}</a>) : (
-                        <Spinner color="primary" size="sm" />
-                    )}
+                    {
+                        userInfo && userInfo.db.puesto != userInfo.db.nombre ? (<h4 className="text-muted">{userInfo.db.puesto}</h4>) : (null)
+                    }
+                    {
+                        userInfo ? (<a href={`mailto:${userInfo.db.mailpuesto}`}>{userInfo.db.mailpuesto}</a>) : (
+                            <Spinner color="primary" size="sm" />
+                        )}
 
                 </Col>
             </Row>

@@ -30,8 +30,8 @@ class ActiveDirectory(BaseHost):
         l = ldap.initialize(server)
         l.protocol_version = 3
         l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_X_TLS,ldap.OPT_X_TLS_DEMAND)
-        l.set_option( ldap.OPT_X_TLS_DEMAND, True )
+        l.set_option(ldap.OPT_X_TLS, ldap.OPT_X_TLS_DEMAND)
+        l.set_option(ldap.OPT_X_TLS_DEMAND, True)
         l.simple_bind_s(DN, password)
 
         return l
@@ -60,24 +60,23 @@ class ActiveDirectory(BaseHost):
         '''
         Modify a parameter of a object(user, group...)
         '''
-        ldif = []
-        for key,value in attrs.items():
-            ldif.append(tuple(ldap.MOD_REPLACE, key, bytes(value, "utf-8")))
-
+        ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8")))
+                for (key, value) in attrs.items()]
+        print(ldif)
         result = self.conn.modify_ext(
-            "CN={0},{1}".format(username,self.base),
+            "CN={0},{1}".format(username, self.base),
             ldif
         )
 
         return result
-    
+
     def create_user(self, username, data):
         '''
         Creates a new user
         '''
         print(data)
         conn = PowerShell()
-        command = "New-ADUser -Name '{}' -GivenName '{}' -Surname '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(\
+        command = "New-ADUser -Name '{}' -GivenName '{}' -Surname '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(
             data['name'] if data.get("name") else username,
             data['GivenName'] if data.get("GivenName") else username,
             data['Surname'] if data.get("Surname") else "",
@@ -87,7 +86,8 @@ class ActiveDirectory(BaseHost):
             data['Password']
         )
         return conn.execute(command)
+
     def deleteUser(self, username):
-        self.conn.delete_s("CN={0},{1}".format(username,self.base))
+        self.conn.delete_s("CN={0},{1}".format(username, self.base))
 
     ##### INTERACTION #####

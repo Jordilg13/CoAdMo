@@ -4,6 +4,11 @@ import { useMediaQuery } from 'react-responsive';
 
 // COLUMNS THAT WILL HAVE THE DATATABLE
 export const columns = [
+    // {
+    //     name: 'Numero',
+    //     selector: 'number',
+    //     sortable: true,
+    // },
     {
         name: 'Usuario',
         selector: 'user',
@@ -38,14 +43,36 @@ export const customSort = (rows, field, direction) => {
 };
 
 
-export const submitUser = e => {
+export const createUser = e => {
     e.preventDefault();
 
     let data = {}
+    let username = false
     e.target.forEach(element => {
+        username = element.id == "SamAccountName" && element.SamAccountName
         element.localName == "input" && (data[element.id] = element.value)
     });
-    agent.Users.create(data).then(data => {
+    agent.Users.create(username,data).then(data => {
+        console.log(data);
+
+    })
+
+
+}
+
+export const updateUser = e => {
+    e.preventDefault();
+
+    let data = {}
+    let username = false
+    e.target.forEach(element => {
+        console.log(element);
+        
+        element.id == "SamAccountName" && (username = element.value)
+        element.localName == "input" && !element.disabled && (data[element.id] = element.value)
+    });
+
+    agent.Users.update(username,data).then(data => {
         console.log(data);
 
     })

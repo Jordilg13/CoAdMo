@@ -12,10 +12,11 @@ class Users(models.Model):
     mailpersonal = models.CharField(db_column='MailPersonal', max_length=4000, blank=True, null=True)
     nomofi = models.CharField(db_column='NOMOFI', max_length=30, blank=True, null=True)
     nompobl = models.CharField(db_column='NOMPOBL', max_length=20, blank=True, null=True)
-    ubicacion = models.CharField(max_length=4000, blank=True, null=True)
-    department = models.CharField(max_length=4000, blank=True, null=True)
-    foto = models.BinaryField(blank=True, null=True)
+    ubicacion = models.CharField(db_column='ubicacion',max_length=4000, blank=True, null=True)
+    department = models.CharField(db_column='department',max_length=4000, blank=True, null=True)
+    puesto = models.CharField(db_column='puesto',max_length=4000, blank=True, null=True)
+    foto = models.BinaryField(db_column='foto',blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'empleadoss'
+        db_table = 'FichaEmpleados'

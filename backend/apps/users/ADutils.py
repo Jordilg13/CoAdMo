@@ -41,7 +41,7 @@ def set_flags(users, expiration_time):
         exp_date = i['pwdLastSet'] + expiration_time
         today = datetime.datetime.today().timestamp()
 
-        if i['pwdLastSet'] != 0 and i['accountExpires'] != "0" and today > exp_date:
+        if i['pwdLastSet'] != 0 and i['userAccountControl'] != "66048" and today > exp_date:
             i['isExpired'] = True
 
     return users

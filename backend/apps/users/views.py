@@ -29,7 +29,7 @@ class AllUsers(APIView):
         # all that matches with the filter
         query_filter = "(&(objectClass=user))"
         attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime"]  # return the attributes that matches with the given arguments
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "employeeNumber"]  # return the attributes that matches with the given arguments
 
         # execute the query
         users = host.search(query_filter, attrs)
@@ -100,12 +100,12 @@ class UnlockUser(APIView):
 
     def get(self, request, username):
         host = ActiveDirectory()
-        result = host.modify(username, {"lockoutTime":"0"})
+        result = host.modify(username, {"lockoutTime": "0"})
         host.conn.unbind_s()
 
-        savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
-                       justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
-        savelog.save()  # save log in the db
+        # savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
+        #                justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
+        # savelog.save()  # save log in the db
 
         return Response(result)
 
@@ -125,8 +125,23 @@ class DeleteUser(APIView):
 
     def delete(self, request, username):
         host = ActiveDirectory()
-        
+
         return Response(host.deleteUser(username))
+
+
+class UpdateUser(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, username):
+        host = ActiveDirectory()
+        result = host.modify(username, request.data['data'])
+        host.conn.unbind_s()
+
+        # savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
+        #                justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
+        # savelog.save()  # save log in the db
+
+        return Response(result)
 
 # class Users(APIView):
 #     permission_classes = (IsAuthenticated,)
