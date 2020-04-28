@@ -60,10 +60,8 @@ class ActiveDirectory(BaseHost):
         '''
         Modify a parameter of a object(user, group...)
         '''
+        ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8"))) for (key, value) in attrs.items()]
 
-        ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8")))
-                for (key, value) in attrs.items()]
-        print(ldif)
         result = self.conn.modify_ext(
             dn,
             ldif
@@ -73,9 +71,8 @@ class ActiveDirectory(BaseHost):
 
     def create_user(self, username, data):
         '''
-        Creates a new user
+        Creates a new user with the recieved data
         '''
-        print(data)
         conn = PowerShell()
         command = "New-ADUser -Name '{}' -GivenName '{}' -Surname '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(
             data['name'],
@@ -89,6 +86,9 @@ class ActiveDirectory(BaseHost):
         return conn.execute(command)
 
     def deleteUser(self, cn):
+        """
+        Delete the given user
+        """
         self.conn.delete_s(cn)
 
     ##### INTERACTION #####

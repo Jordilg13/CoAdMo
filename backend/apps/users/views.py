@@ -63,6 +63,8 @@ class User(APIView):
             "errors": False,
             "errors_in": []
         }
+        # try to get user info from the db, if it fails, 
+        # add db to the errors to display them in frontend
         try:
             serializer = UserSerializer(Users.objects.get(usuario=username))
         except Users.DoesNotExist as err:
@@ -71,13 +73,14 @@ class User(APIView):
             result_data['errors_in'].append("base de datos")
 
         host = ActiveDirectory()
-        print(username)
 
         # all that matches with the filter
-        query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
-            username)
-        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]  # return the attributes that matches with the given arguments
+        query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(username)
+        # return the attributes that matches with the given arguments
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", 
+                 "pwdLastSet", "sAMAccountName", "userAccountControl",
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]  
+                 
 
         # execute the query
         ad_user_info = host.search(query_filter, attrs)
@@ -96,8 +99,7 @@ class User(APIView):
             result_data["ad"] = ad_user_info[0]
 
         # Process data
-        result_data['db'].update({key: value.strip() if isinstance(
-            value, str) else value for key, value in serializer.data.items()})
+        result_data['db'].update({key: value.strip() if isinstance(value, str) else value for key, value in serializer.data.items()})
 
         host.conn.unbind_s()
         return Response(result_data)

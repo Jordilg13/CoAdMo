@@ -27,8 +27,7 @@ function Tablee(props) {
 
     // componentdidmount like behavior
     useEffect(() => {
-        // agent.Users.getAll().then((data) => {
-        //     // setusers(data);
+
         let users = []
         props.users.map((user, index) => {
             let status = ""

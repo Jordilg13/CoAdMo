@@ -8,6 +8,8 @@ import logo from '../../assets/img/brand/big_logo_coadmo.png'
 import sygnet from '../../assets/img/brand/small_logo_coadmo.png'
 import agent from "../../agent/agent"
 import { connect } from 'react-redux'
+import jwt from "jwt-decode";
+import JwtDecode from 'jwt-decode';
 
 const propTypes = {
   children: PropTypes.node,
@@ -38,36 +40,60 @@ class DefaultHeader extends Component {
 
     // load token from localstorage to the state
     const token = window.localStorage.getItem("token");
-    if (token) agent.setToken(token)
-    this.props.loadToken(token, token ? agent.Auth.current() : null)
+    if (token) {
+      agent.setToken(token)
+
+      // loads the token if its valid
+      let decoded = JwtDecode(token)
+
+      if (this.isTokenExpired(decoded['exp'])) {
+        console.log("LOGING OUT");
+        this.props.logout()
+        this.props.redirectTo("/login")
+      } else {
+        this.props.loadToken(token, token ? agent.Auth.current() : null)
+      }
+    } else {
+      console.log("LOGING OUT");
+      this.props.logout()
+      this.props.redirectTo("/login")
+    }
+
+  }
+
+  isTokenExpired = (sec) => {
+    let exp_date = new Date(sec).getTime()
+    let today = (new Date().getTime() / 1000)
+
+    return exp_date < today
   }
 
   // returns the buton of login or the user's avatar and username if it's logged
   UserStatus = () => {
-      if (this.props.auth.username) {
-        return <><NavItem className="d-md-down-none">
-          <NavLink to="#" className="nav-link">{this.props.auth.username}</NavLink>
-        </NavItem>
-          <UncontrolledDropdown nav direction="down">
-            <DropdownToggle nav>
-              <img src={`https://eu.ui-avatars.com/api/?name=${this.props.auth.username}&background=084fb9&color=fff&length=3&font-size=0.33`} className="img-avatar" alt="admin@bootstrapmaster.com" />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem onClick={e => this.signOut(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown></>
-      } else {
-        return <NavItem className="px-3">
-          <NavLink to="/login" className="nav-link">Login</NavLink>
-        </NavItem>
-      }
+    if (this.props.auth.username) {
+      return <><NavItem className="d-md-down-none">
+        <NavLink to="#" className="nav-link">{this.props.auth.username}</NavLink>
+      </NavItem>
+        <UncontrolledDropdown nav direction="down">
+          <DropdownToggle nav>
+            <img src={`https://eu.ui-avatars.com/api/?name=${this.props.auth.username}&background=084fb9&color=fff&length=3&font-size=0.33`} className="img-avatar" alt="admin@bootstrapmaster.com" />
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem onClick={e => this.signOut(e)}><i className="fa fa-lock"></i> Logout</DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown></>
+    } else {
+      return <NavItem className="px-3">
+        <NavLink to="/login" className="nav-link">Login</NavLink>
+      </NavItem>
+    }
 
   }
 
 
-  render() {    
+  render() {
     console.log(this.props);
-    
+
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 

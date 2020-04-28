@@ -23,5 +23,8 @@ class LoginAPIView(APIView):
 
 
 class LoggedUser(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
+        print(request.user.username)
         return Response(request.user.username)

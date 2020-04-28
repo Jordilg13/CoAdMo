@@ -12,7 +12,7 @@ export class Dashboard extends Component {
         this.state = {
              users:[]
         }
-        agent.Users.getAll().then(users => {
+        this.props.auth && agent.Users.getAll().then(users => {
             this.setState({users})
         })
     }

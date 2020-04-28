@@ -30,12 +30,7 @@ const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 const mapStateToProps = state => ({ ...state.auth });
 
-const mapDispatchToProps = dispatch => ({
-  // logout: () =>
-  //   dispatch({ type: "LOGOUT" }),
-  // loadToken: (token, payload) =>
-  //     dispatch({type: "APP_LOAD", token, payload})
-});
+const mapDispatchToProps = dispatch => ({});
 
 
 class DefaultLayout extends Component {

@@ -7,12 +7,13 @@ class PowerShell():
     @property
     def credentials(self):
         """
-        Return a string that generates the credentials of the user with permissions in the AD to execute the command.
-        Should be appended at the start of any command that requires admin permissions.
+        Return a string that generates the credentials of the user 
+        with permissions in the AD to execute the command.
+        Should be appended at the start of any command that requires 
+        admin permissions.
         The comand should accept the parameter '-Credential'
         """
-        credentials = "$password = ConvertTo-SecureString '%s' -AsPlainText -Force;" % os.getenv(
-            "LDAP_PASSWORD")
+        credentials = "$password = ConvertTo-SecureString '%s' -AsPlainText -Force;" % os.getenv("LDAP_PASSWORD")
         credentials += "$credential = new-object -typename System.Management.Automation.PSCredential -argumentlist 'PROJECTEJORDI\Administrador',$password;"
         return credentials
 
@@ -33,8 +34,11 @@ class PowerShell():
         Executes the given command with powershell
 
         Optional params:
-            - credentials: (by default True) If is setted to False, the command won't be able to execute commands that requires admin permissions.
+            - credentials: (by default True) If is setted to False, 
+            the command won't be able to execute commands that requires 
+            admin permissions.
         """
+        
         # check if the comand should have the credentials appended
         if credentials:
             command = self.credentials+command+" -Credential $credential"
@@ -42,7 +46,9 @@ class PowerShell():
         # execute command in a new process
         e = subprocess.Popen(
             ['powershell.exe', '-command', command], stdout=subprocess.PIPE)
-        # normally the response type will be bytes, then we'll try to decode it, but not always is bytes
+
+        # normally the response type will be bytes, then we'll try to decode it, 
+        # but not always is bytes
         try:
             output = e.communicate()[0].decode("unicode_escape")
         except UnicodeDecodeError as err:
