@@ -6,14 +6,20 @@ import pythoncom
 
 
 class BaseHost():
-    def __init__(self, request, hostname):
+    def __init__(self, request, hostname, privileges=[]):
         self.hostname = hostname
+        self.privileges = privileges
         self.conn = self.connection(request)
         self.status = self.is_up()
 
     def connection(self, request):
         pythoncom.CoInitialize()
-        return wmi.WMI(self.hostname, user=os.getenv("LDAP_ADMIN"), password=os.getenv("LDAP_PASSWORD"))
+        return wmi.WMI(
+            computer=self.hostname,
+            user=os.getenv("LDAP_ADMIN"),
+            password=os.getenv("LDAP_PASSWORD"),
+            privileges=self.privileges
+        )
 
     ##### MONITORING #####
 
@@ -29,6 +35,7 @@ class BaseHost():
     # SPACE
     def space_available(self):
         space = []
+
         search_class = "win32_LogicalDisk"
         props = ["Name", "FreeSpace", "Size"]
         result = self.get_values(search_class, props, {"DriveType": "3"})
@@ -154,18 +161,17 @@ class BaseHost():
     def get_values(self, s_class, props, filters={}):
         """
         Return input properties of the given class.
-        If there are more than 1 result, it will return an array of items(E.G.  )
+        This will return an array with the results.
         """
         values = []
 
         for i in getattr(self.conn, s_class)(**filters):
             values.append({})  # new object for each result
             for j in props:
-                # set the dound value with the name of the prop (E.G. "Name" -> json_obj['Name'] = result.Name)
+                # set the dound value with the name of the prop
+                # (E.G. "Name" -> json_obj['Name'] = result.Name)
                 values[-1][j] = getattr(i, j)
 
-        # return the item if there is only one item, and not an array with 1 item
-        # return values if len(values) > 1 else values[0]
         return values
 
     # SOFTWARE INFO ?
@@ -200,35 +206,32 @@ class BaseHost():
             # print(sk)
             programs.append({})
             path = key_path+"\\"+sk
-            key = wr.OpenKey(rem_reg, path, 0,
-                             wr.KEY_READ | wr.KEY_WOW64_64KEY)
+            key = wr.OpenKey(rem_reg, path, 0, wr.KEY_READ |
+                             wr.KEY_WOW64_64KEY)
             try:
                 programs[-1]['DisplayName'] = str(
                     wr.QueryValueEx(key, 'DisplayName')[0])
                 programs[-1]['UninstallString'] = str(
                     wr.QueryValueEx(key, 'UninstallString')[0])
             except:
-                # print("Can't retrieve {}".format(sk))
                 programs.pop()
 
         return {
             "drivers": drivers,
             "programs": programs,
-            # "test2": names,
         }
 
     ##### INTERACTIONS #####
 
     # APAGAR
-
     def shutdown(self):
-        command = "Stop-Computer -ComputerName %s -Credential $credential -Force" % self.hostname
-        return self.ps.execute(command)
+        os = self.conn.Win32_OperatingSystem(Primary=1)[0]
+        return os.Shutdown()
 
     # REINICIAR
     def restart(self):
-        command = "Restart-Computer -ComputerName %s -Credential $credential -Force" % self.hostname
-        return self.ps.execute(command)
+        os = self.conn.Win32_OperatingSystem(Primary=1)[0]
+        return os.Reboot()
 
     #  WAKE ON LAN ?
 

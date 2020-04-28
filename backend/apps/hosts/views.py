@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from classes.BaseHost import BaseHost
-import os, wmi
+import os
+import wmi
 
 
 class Host(APIView):
@@ -16,15 +17,14 @@ class Host(APIView):
         if parameter not in self.allowed_parameters:
             return Response("Invalid parameter '%s'" % parameter)
 
-        # new basehost with his monitor operations
-        
         try:
+            # new basehost with his monitor operations
             host = BaseHost(request, hostname)
         except wmi.x_wmi as x:
             return Response({
                 "error": True,
                 "msg": x.com_error.excepinfo[2]
-                })
+            })
 
         # if host is down, dont check nothing
         if host.status == -1:

@@ -56,15 +56,16 @@ class ActiveDirectory(BaseHost):
 
         return users
 
-    def modify(self, username, attrs):
+    def modify(self, dn, attrs):
         '''
         Modify a parameter of a object(user, group...)
         '''
+
         ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8")))
                 for (key, value) in attrs.items()]
         print(ldif)
         result = self.conn.modify_ext(
-            "CN={0},{1}".format(username, self.base),
+            dn,
             ldif
         )
 

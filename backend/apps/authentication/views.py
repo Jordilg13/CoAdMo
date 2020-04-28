@@ -1,17 +1,14 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
-# from .renderers import UserJSONRenderer
-from .serializers import LoginSerializer
+from rest_framework.views import APIView
 
-# Create your views here.
+from .serializers import LoginSerializer
 
 
 class LoginAPIView(APIView):
     permission_classes = (AllowAny,)
-    # renderer_classes = (UserJSONRenderer,)
     serializer_class = LoginSerializer
 
     def post(self, request):

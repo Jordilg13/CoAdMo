@@ -1,8 +1,9 @@
-from rest_framework import serializers
-from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
+
 import jwt
 from django.conf import settings
+from django.contrib.auth import authenticate
+from rest_framework import serializers
 
 
 class LoginSerializer(serializers.Serializer):
@@ -15,22 +16,18 @@ class LoginSerializer(serializers.Serializer):
         password = data.get("password", None)
 
         if username is None:
-            raise serializers.ValidationError(
-                "Username is missing."
-            )
+            raise serializers.ValidationError("Username is missing.")
 
         if username is None:
-            raise serializers.ValidationError(
-                "Password is missing."
-            )
+            raise serializers.ValidationError("Password is missing.")
 
         user = authenticate(
             username=username,
-            password=password,
-        )
+            password=password)
+
         if user is None:
             raise serializers.ValidationError({
-                'error':'Invalid credentials, please try again.'
+                'error': 'Invalid credentials, please try again.'
             })
 
         return {

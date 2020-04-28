@@ -7,7 +7,6 @@ import { FilterComponent } from "./FilterComponent";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUserPlus, } from '@fortawesome/free-solid-svg-icons'
 // USERS
-import { CreateUser } from "../User/actions/CreateUser";
 import { UnlockUser } from '../User/actions/UnlockUser';
 // DATATABE
 import { customSort, columns } from "./utils"
@@ -108,12 +107,6 @@ function Tablee(props) {
     return (
         <>
             {/* CREATE USER MODAL */}
-            <CreateUser
-                modal={modal}
-                toggle={toggle}
-                classes={props}
-                showPassword={showPassword}
-                ssp={setshowPassword} />
             {
                 isTabletOrMobile ?
                     (

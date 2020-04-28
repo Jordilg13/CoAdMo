@@ -10,6 +10,5 @@ urlpatterns = [
     path("user/unlock/<str:username>", UnlockUser.as_view()),
     path("user/create/<str:username>", CreateUser.as_view()),
     path("user/delete/<str:username>", DeleteUser.as_view()),
-    path("user/update/<str:username>", UpdateUser.as_view()),
-    # path("users/<str:parameter>", Users.as_view()),
+    path("user/update/<str:dn>", UpdateUser.as_view()),
 ]

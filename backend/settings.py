@@ -9,10 +9,12 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from django_auth_ldap.config import LDAPSearch, NestedActiveDirectoryGroupType
-import ldap
 import os
+
+import ldap
+from django_auth_ldap.config import LDAPSearch, NestedActiveDirectoryGroupType
 from dotenv import load_dotenv
+
 load_dotenv(verbose=True)
 DEBUG = True
 
@@ -27,10 +29,16 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
 }
 
 # User and group search objects and types
-AUTH_LDAP_USER_SEARCH = LDAPSearch(os.getenv("DOMAIN"),
-                                   ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)")
-AUTH_LDAP_GROUP_SEARCH = LDAPSearch(os.getenv("DOMAIN"),
-                                    ldap.SCOPE_SUBTREE, "(objectClass=group)")
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    os.getenv("DOMAIN"),
+    ldap.SCOPE_SUBTREE,
+    "(sAMAccountName=%(user)s)")
+
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    os.getenv("DOMAIN"),
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=group)")
+
 AUTH_LDAP_GROUP_TYPE = NestedActiveDirectoryGroupType()
 
 # Cache settings
@@ -218,13 +226,8 @@ LOGGING = {
 
 
 REST_FRAMEWORK = {
-    # 'EXCEPTION_HANDLER': 'apps.core.exceptions.core_exception_handler',
-    # 'NON_FIELD_ERRORS_KEY': 'error',
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
         'apps.authentication.backends.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 20,
 }

@@ -34,7 +34,7 @@ export const customSort = (rows, field, direction) => {
         if (!row[field]) {
             return "";
         }
-        if (field === "state") {
+        if (field === "status" || field === "user") {
             return row[field].props.children;
         }
         return row[field];
@@ -52,7 +52,7 @@ export const createUser = e => {
         username = element.id == "SamAccountName" && element.SamAccountName
         element.localName == "input" && (data[element.id] = element.value)
     });
-    agent.Users.create(username,data).then(data => {
+    agent.Users.create(username, data).then(data => {
         console.log(data);
 
     })
@@ -60,19 +60,22 @@ export const createUser = e => {
 
 }
 
-export const updateUser = e => {
+export const updateUser = (e, data) => {
     e.preventDefault();
-
-    let data = {}
-    let username = false
+    console.log(data);
+    
+    let new_data = {}
+    
     e.target.forEach(element => {
         console.log(element);
-        
-        element.id == "SamAccountName" && (username = element.value)
-        element.localName == "input" && !element.disabled && (data[element.id] = element.value)
+        if (element.localName == "input" && data[element.id] != element.value && !element.disabled) {
+            console.log("ELEM",element);           
+            new_data[element.id] = element.value
+        }
     });
-
-    agent.Users.update(username,data).then(data => {
+    
+    console.log("updateUser -> new_data", new_data)
+    agent.Users.update(data['distinguishedName'], new_data).then(data => {
         console.log(data);
 
     })

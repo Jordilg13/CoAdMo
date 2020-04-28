@@ -26,13 +26,13 @@ export const UserForm = (props) => {
             <Modal isOpen={modal} toggle={toggle} className={'modal-lg ' + 'modal-primary ' + props.classes}>
                 <ModalHeader toggle={toggle}>Añadir Usuario</ModalHeader>
                 <ModalBody>
-                    <Form onSubmit={isUpdate ? updateUser : createUser} id="create-user-form">
+                    <Form onSubmit={isUpdate ? (event) => updateUser(event, props.user) : createUser} id="create-user-form">
                         <Row>
                             <Col xs="12" sm="12" lg="12">
                                 <FormGroup>
-                                    <Label for="name">Name</Label>
-                                    <Input type="text" name="name" id="name" placeholder="Name"
-                                        defaultValue={isUpdate ? props.user.cn : ""} required disabled={isUpdate} />
+                                    <Label for="cn">Name</Label>
+                                    <Input type="text" name="cn" id="cn" placeholder="CommonName"
+                                        defaultValue={isUpdate ? props.user.cn : ""} required />
                                 </FormGroup>
                             </Col>
                             {/* <Col xs="12" sm="6" lg="6">
@@ -45,24 +45,24 @@ export const UserForm = (props) => {
                         <Row>
                             <Col xs="12" sm="6" lg="6">
                                 <FormGroup>
-                                    <Label for="GivenName">GivenName</Label>
-                                    <Input type="text" name="GivenName" id="GivenName" placeholder="GivenName"
+                                    <Label for="givenName">GivenName</Label>
+                                    <Input type="text" name="givenName" id="givenName" placeholder="GivenName"
                                         defaultValue={isUpdate ? props.user.givenName : ""} required />
                                 </FormGroup>
                             </Col>
                             <Col xs="12" sm="6" lg="6">
                                 <FormGroup>
-                                    <Label for="SamAccountName">SamAccountName</Label>
-                                    <Input type="text" name="SamAccountName" id="SamAccountName" placeholder="SamAccountName"
-                                        defaultValue={isUpdate ? props.user.sAMAccountName : ""} required disabled={isUpdate} />
+                                    <Label for="sAMAccountName">SamAccountName</Label>
+                                    <Input type="text" name="sAMAccountName" id="sAMAccountName" placeholder="sAMAccountName"
+                                        defaultValue={isUpdate ? props.user.sAMAccountName : ""} required />
                                 </FormGroup>
                             </Col>
                         </Row>
                         <Row>
                             <Col xs="12" sm="12" lg="6">
                                 <FormGroup>
-                                    <Label for="UserPrincipalName">UserPrincipalName</Label>
-                                    <Input type="text" name="UserPrincipalName" id="UserPrincipalName" placeholder="UserPrincipalName"
+                                    <Label for="userPrincipalName">userPrincipalName</Label>
+                                    <Input type="text" name="userPrincipalName" id="userPrincipalName" placeholder="userPrincipalName"
                                         defaultValue={isUpdate ? props.user.userPrincipalName : ""} required />
                                 </FormGroup>
                             </Col>

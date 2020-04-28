@@ -12,7 +12,7 @@ def ad_timestamp(timest):
 
 def format_data(users):
     """
-    Format the data removeing extra and unecessary arrays
+    Format the data removing extra and unecessary arrays
     """
     users = [i[1] for i in users]
     for i in users:
@@ -27,20 +27,22 @@ def set_flags(users, expiration_time):
     Marks are 'isExpired' and 'isBlocked'
     """
     for i in users:
-        # BLOCKED USERS
-        
+        # BLOCKED USERS ------
         try:
             if i['lockoutTime'] != "0":
                 i['isBlocked'] = True
         except:
             pass
 
+        # USERS WITH EXPIRED PASSWORDS ------
+        # convert teh date from the format of the active directory to a normal date
         i['pwdLastSet'] = ad_timestamp(int(i['pwdLastSet']))
 
-        # USERS WITH EXPIRED PASSWORDS
+        # sets the expiration date and the date of rigth now
         exp_date = i['pwdLastSet'] + expiration_time
         today = datetime.datetime.today().timestamp()
-
+        
+        # check if the user's password is expired
         if i['pwdLastSet'] != 0 and i['userAccountControl'] != "66048" and today > exp_date:
             i['isExpired'] = True
 

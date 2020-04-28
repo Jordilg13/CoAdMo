@@ -1,19 +1,22 @@
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from classes.ActiveDirectory import ActiveDirectory
-from rest_framework.response import Response
-from rest_framework.views import APIView
+import datetime
+import os
+import pprint
+import time
+
+import ldap
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 import apps.users.ADutils as utils
-from .serializers import UserSerializer
 from apps.core.models import Logs
 from apps.core.serializers import LogsSerializer
+from classes.ActiveDirectory import ActiveDirectory
+
 from .models import Users
-import datetime
-import pprint
-import ldap
-import time
-import os
+from .serializers import UserSerializer
 
 # Create your views here.
 
@@ -28,8 +31,12 @@ class AllUsers(APIView):
 
         # all that matches with the filter
         query_filter = "(&(objectClass=user))"
-        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "employeeNumber"]  # return the attributes that matches with the given arguments
+
+        # return the attributes that matches with the given arguments
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", 
+                 "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", 
+                 "employeeNumber"]
 
         # execute the query
         users = host.search(query_filter, attrs)
@@ -41,6 +48,7 @@ class AllUsers(APIView):
         users = utils.set_flags(
             users,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
 
+        # close the connection when the operation is done
         host.conn.unbind_s()
         return Response(users)
 
@@ -69,7 +77,7 @@ class User(APIView):
         query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
             username)
         attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime"]  # return the attributes that matches with the given arguments
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]  # return the attributes that matches with the given arguments
 
         # execute the query
         ad_user_info = host.search(query_filter, attrs)
@@ -132,9 +140,9 @@ class DeleteUser(APIView):
 class UpdateUser(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def put(self, request, username):
+    def put(self, request, dn):
         host = ActiveDirectory()
-        result = host.modify(username, request.data['data'])
+        result = host.modify(dn, request.data['data'])
         host.conn.unbind_s()
 
         # savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
