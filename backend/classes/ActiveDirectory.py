@@ -78,17 +78,17 @@ class ActiveDirectory(BaseHost):
         print(data)
         conn = PowerShell()
         command = "New-ADUser -Name '{}' -GivenName '{}' -Surname '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(
-            data['name'] if data.get("name") else username,
-            data['GivenName'] if data.get("GivenName") else username,
-            data['Surname'] if data.get("Surname") else "",
-            data['SamAccountName'] if data.get("SamAccountName") else username,
-            data['UserPrincipalName'] if data.get("UserPrincipalName") else "",
+            data['name'],
+            data['givenName'],
+            data['Surname'],
+            data['sAMAccountName'],
+            data['userPrincipalName'],
             self.base,
             data['Password']
         )
         return conn.execute(command)
 
-    def deleteUser(self, username):
-        self.conn.delete_s("CN={0},{1}".format(username, self.base))
+    def deleteUser(self, cn):
+        self.conn.delete_s(cn)
 
     ##### INTERACTION #####

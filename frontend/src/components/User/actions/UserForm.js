@@ -35,12 +35,6 @@ export const UserForm = (props) => {
                                         defaultValue={isUpdate ? props.user.cn : ""} required />
                                 </FormGroup>
                             </Col>
-                            {/* <Col xs="12" sm="6" lg="6">
-                                <FormGroup>
-                                    <Label for="Surname">Surname</Label>
-                                    <Input type="text" name="Surname" id="Surname" placeholder="Surname" value={props.user.surname}  required />
-                                </FormGroup>
-                            </Col> */}
                         </Row>
                         <Row>
                             <Col xs="12" sm="6" lg="6">

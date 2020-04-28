@@ -106,14 +106,11 @@ class User(APIView):
 class UnlockUser(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, username):
+    def get(self, request, cn):
         host = ActiveDirectory()
-        result = host.modify(username, {"lockoutTime": "0"})
+        result = host.modify(cn, {"lockoutTime": "0"})
         host.conn.unbind_s()
-
-        # savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
-        #                justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
-        # savelog.save()  # save log in the db
+        # TODO: add logging system
 
         return Response(result)
 
@@ -133,8 +130,7 @@ class DeleteUser(APIView):
 
     def delete(self, request, username):
         host = ActiveDirectory()
-
-        return Response(host.deleteUser(username))
+        return Response(host.deleteUser(cn))
 
 
 class UpdateUser(APIView):
