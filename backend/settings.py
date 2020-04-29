@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'apps.hosts',
     'apps.users',
     'apps.core',
+    'apps.monitor',
 
 ]
 

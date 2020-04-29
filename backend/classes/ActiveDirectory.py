@@ -10,9 +10,9 @@ import datetime
 # Get-ADComputer -Filter * -SearchBase "DC=projectejordi,DC=es" -Credential $credential -Properties *
 
 
-class ActiveDirectory(BaseHost):
+class ActiveDirectory():
     def __init__(self):
-        super().__init__(self, os.getenv("LDAP_IP"))
+        # super().__init__(self, os.getenv("LDAP_IP"))
         self.conn = self.setup()
         self.base = os.getenv("DOMAIN")
         self.scope = ldap.SCOPE_SUBTREE
@@ -60,7 +60,8 @@ class ActiveDirectory(BaseHost):
         '''
         Modify a parameter of a object(user, group...)
         '''
-        ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8"))) for (key, value) in attrs.items()]
+        ldif = [tuple((ldap.MOD_REPLACE, key, bytes(value, "utf-8")))
+                for (key, value) in attrs.items()]
 
         result = self.conn.modify_ext(
             dn,

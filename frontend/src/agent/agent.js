@@ -50,12 +50,19 @@ const Users = {
     create: (username,data) =>
         requests.post(`/user/create/${username}`, { data: data }),
     update: (username,data) =>
-        requests.update(`/user/update/${username}`, { data: data })
+        requests.update(`/user/update/${username}`, { data: data }),
+    unlock: (dn) =>
+        requests.get(`/user/unlock/${dn}`)
+}
+const Services = {
+    get: (service, hostname) =>
+        requests.get(`/monitor/${service}/${hostname}`)
 }
 
 export default {
     Auth,
     Host,
     Users,
+    Services,
     setToken: _token => { token = _token; }
 }

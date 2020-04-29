@@ -24,4 +24,5 @@ urlpatterns = [
     url('', include('apps.authentication.urls')),
     url('host/', include('apps.hosts.urls')),
     url('', include('apps.users.urls')),
+    url('monitor/', include('apps.monitor.urls')),
 ]
