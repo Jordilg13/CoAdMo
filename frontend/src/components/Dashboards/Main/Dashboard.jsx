@@ -14,7 +14,6 @@ const mapDispatchToProps = {
 }
 
 const Dashboard = (props) => {
-    console.log("Dashboard -> props", props)
     // export class Dashboard extends Component {
     const [users, setusers] = useState(false)
     const [servicesStatus, setservicesStatus] = useState(false)
@@ -27,11 +26,8 @@ const Dashboard = (props) => {
     }, [props.auth])
 
     useEffect(() => {
-        console.log("USEFFECT");
-
         props.auth && agent.Services.get("ad", "192.168.1.150").then(data => {
             console.log(data);
-
             setservicesStatus(data)
         })
     }, [])
@@ -92,10 +88,7 @@ const Dashboard = (props) => {
                 </Col>
             </Row>
 
-            <UserTable
-                filtered_users={true}
-                users={users ? users : []}
-            />
+            <UserTable filtered_users={true}/>
 
         </div>
     )

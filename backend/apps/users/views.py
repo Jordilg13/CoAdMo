@@ -33,9 +33,9 @@ class AllUsers(APIView):
         query_filter = "(&(objectClass=user))"
 
         # return the attributes that matches with the given arguments
-        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", 
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName",
                  "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", 
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime",
                  "employeeNumber"]
 
         # execute the query
@@ -63,7 +63,7 @@ class User(APIView):
             "errors": False,
             "errors_in": []
         }
-        # try to get user info from the db, if it fails, 
+        # try to get user info from the db, if it fails,
         # add db to the errors to display them in frontend
         try:
             serializer = UserSerializer(Users.objects.get(usuario=username))
@@ -75,12 +75,12 @@ class User(APIView):
         host = ActiveDirectory()
 
         # all that matches with the filter
-        query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(username)
+        query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
+            username)
         # return the attributes that matches with the given arguments
-        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName", 
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName",
                  "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]  
-                 
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]
 
         # execute the query
         ad_user_info = host.search(query_filter, attrs)
@@ -99,7 +99,8 @@ class User(APIView):
             result_data["ad"] = ad_user_info[0]
 
         # Process data
-        result_data['db'].update({key: value.strip() if isinstance(value, str) else value for key, value in serializer.data.items()})
+        result_data['db'].update({key: value.strip() if isinstance(
+            value, str) else value for key, value in serializer.data.items()})
 
         host.conn.unbind_s()
         return Response(result_data)
@@ -122,8 +123,16 @@ class CreateUser(APIView):
 
     def post(self, request, username):
         host = ActiveDirectory()
-        reponse = host.create_user(username, request.data['data'])
+        data = request.data['data']
+        reponse = host.create_user(username, data['userinfo'])
         host.conn.unbind_s()
+
+        savelog = Logs(
+            service="activedirectory",
+            description=data['just']['desc'],
+            justification=data['just']['just'])
+        savelog.save()  # save log in the db
+
         return Response(reponse)
 
 

@@ -43,37 +43,48 @@ export const customSort = (rows, field, direction) => {
 };
 
 
-export const createUser = e => {
-    e.preventDefault();
+export const createUser = (e, formdata, toggleJust, toggleUserInfo) => {
+    e.preventDefault()
+    const userinfo = formdata
+    const justify = e.target
 
-    let data = {}
-    let username = false
-    e.target.forEach(element => {
-        username = element.id == "SamAccountName" && element.SamAccountName
-        element.localName == "input" && (data[element.id] = element.value)
+    let data = {
+        "userinfo": {},
+        "just": {}
+    }
+
+    // set the user info
+    userinfo.forEach(element => {
+        element.localName == "input" && (data['userinfo'][element.id] = element.value)
     });
-    agent.Users.create(username, data).then(data => {
-        console.log(data);
 
+    // set the jstify info
+    justify.forEach(element => {
+        element.localName == "textarea" && (data['just'][element.id] = element.value)
+    })
+    console.log(data);
+    
+    // POST REQUEST
+    agent.Users.create(data['userinfo']['sAMAccountName'], data).then(data => {
+        console.log(data);
+        toggleJust()
+        toggleUserInfo()
     })
 
 
 }
 
 export const updateUser = (e, data) => {
-    e.preventDefault();
-    console.log(data);
-    
     let new_data = {}
-    
+
     e.target.forEach(element => {
         console.log(element);
         if (element.localName == "input" && data[element.id] != element.value && !element.disabled) {
-            console.log("ELEM",element);           
+            console.log("ELEM", element);
             new_data[element.id] = element.value
         }
     });
-    
+
     console.log("updateUser -> new_data", new_data)
     agent.Users.update(data['distinguishedName'], new_data).then(data => {
         console.log(data);
