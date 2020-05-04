@@ -4,33 +4,38 @@ import { Row, Col } from 'reactstrap'
 import UserTable from '../../UserTable/UserTable'
 import agent from "../../../agent/agent"
 import { connect } from 'react-redux'
+import { services } from "./services"
+
 
 const mapStateToProps = (state) => ({
     ...state
 })
 
-const mapDispatchToProps = {
-
-}
+const mapDispatchToProps = dispatch => ({});
 
 const Dashboard = (props) => {
     // export class Dashboard extends Component {
-    const [users, setusers] = useState(false)
     const [servicesStatus, setservicesStatus] = useState(false)
 
-    // get users only if there are a logged user
+    // CHECK THE STATUS OF EACH SERVICE
     useEffect(() => {
-        props.auth && agent.Users.getAll().then(users => {
-            setusers(users)
-        })
-    }, [props.auth])
+        let dataservs = [];
 
-    useEffect(() => {
-        props.auth && agent.Services.get("ad", "192.168.1.150").then(data => {
-            console.log(data);
-            setservicesStatus(data)
+        services.map(service => {
+            let get = service.hostname ? agent.Services.getSpecific : agent.Services.getDefault;
+
+            dataservs.push(
+                <Col xs="12" sm="6" lg="3" key={service.name + "-" + Math.random()}>
+                    <StateCard
+                        name={service.name}
+                        prom={get(service.healthcheck, service.hostname)}
+                    />
+                </Col>
+            )
+            setservicesStatus(dataservs)
         })
     }, [])
+
 
     return (
         <div>
@@ -38,58 +43,9 @@ const Dashboard = (props) => {
             <br />
             <h4>Estado sistemas</h4>
             <Row>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="ACTIVE DIRECTORY"
-                        description={JSON.stringify(servicesStatus)}
-                        color={!servicesStatus ? "secondary" : "danger"}
-                        po_desc={JSON.stringify(servicesStatus)}
-                    />
-                </Col>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="SISTEMA-EXG"
-                        description="Unavailable"
-                        color="danger"
-                        po_desc="description"
-                    />
-                </Col>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="SISTEMA-IIS"
-                        description="Available"
-                        color="success"
-                        po_desc="estado del servicio en el momento que ha sid cargado el componente"
-                    />
-                </Col>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="SISTEMA-NAS"
-                        description="cao-nas only have 4% free space"
-                        color="warning"
-                        po_desc="estado del servicio en el momento que ha sid cargado el componente"
-                    />
-                </Col>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="SQL-SERVER"
-                        description="Available"
-                        color="success"
-                        po_desc="estado del servicio en el momento que ha sid cargado el componente"
-                    />
-                </Col>
-                <Col xs="12" sm="6" lg="3">
-                    <StateCard
-                        name="DNS"
-                        description="Available"
-                        color="success"
-                        po_desc="estado del servicio en el momento que ha sid cargado el componente"
-                    />
-                </Col>
+                {servicesStatus.length > 0 && servicesStatus} {/* STATUS TABS */}
             </Row>
-
-            <UserTable filtered_users={true}/>
-
+            <UserTable filtered_users={true} />
         </div>
     )
 

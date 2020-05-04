@@ -5,7 +5,6 @@ import { faUnlockAlt } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'reactstrap'
 import agent from '../../../agent/agent'
 import toastr from 'toastr'
-import 'toastr/build/toastr.min.css'
 
 export const UnlockUser = (props) => {
     const unlockUser = () => {

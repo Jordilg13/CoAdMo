@@ -55,8 +55,11 @@ const Users = {
         requests.get(`/user/unlock/${dn}`)
 }
 const Services = {
-    get: (service, hostname) =>
-        requests.get(`/monitor/${service}/${hostname}`)
+    getSpecific: (service, hostname) =>
+        requests.get(`/monitor/${service}/${hostname}`),
+    getDefault: (service) =>
+        requests.get(`/monitor/${service}`),
+    
 }
 
 export default {

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component';
-import { Badge, Button, Table, Row, ButtonGroup, Spinner } from 'reactstrap';
+import { Badge, Button, Table, ButtonGroup } from 'reactstrap';
 import { useMediaQuery } from 'react-responsive'
 import { FilterComponent } from "./FilterComponent";
-// FONTAWESOME
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faUserPlus, } from '@fortawesome/free-solid-svg-icons'
 // USERS
 import { UnlockUser } from '../User/actions/UnlockUser';
 // DATATABE
@@ -13,47 +10,24 @@ import { customSort, columns } from "./utils"
 import { DeleteUser } from '../User/actions/DeleteUser';
 import { UserForm } from '../User/actions/UserForm';
 import agent from '../../agent/agent';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
-
-const CustomLoader = () => (<Spinner></Spinner>);
-const useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      '& > * + *': {
-        marginTop: theme.spacing(2),
-      },
-    },
-  }));
-const LinearIndeterminate = () => {
-    const classes = useStyles();
-  
-    return (
-      <div className={classes.root}>
-        <LinearProgress />
-      </div>
-    );
-  };
+import LinearIndeterminate from "./LinearIndeterminate"
 
 
-
-function Tablee(props) {
+function UserTable(props) {
     // HOOKS
     const [filterText, setFilterText] = useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const [users, setusers] = useState([]);
-    const [modal, setModal] = useState(false);
     const [pending, setpending] = useState(true);
-    const [showPassword, setshowPassword] = useState(false);
-    const toggle = () => setModal(!modal);
 
     // componentdidmount like behavior
     useEffect(() => {
 
         agent.Users.getAll().then(users => {
-            console.log("Tablee -> users", users)
+            console.log("UserTable -> users", users)
             users.map((user, index) => {
                 let status = ""
+                // default actions
                 let actions = (
                     <ButtonGroup>
                         <UserForm action="update" user={user} />
@@ -64,6 +38,7 @@ function Tablee(props) {
                 status = user.isExpired ? <Badge color="warning">Caducado</Badge> : status
                 status = user.isBlocked ? <Badge color="danger">Bloqueado</Badge> : status
 
+                // adds the actions
                 actions = user.isBlocked ? (
                     <ButtonGroup>
                         <UnlockUser user={user} />
@@ -71,8 +46,11 @@ function Tablee(props) {
                         <DeleteUser user={user} />
                     </ButtonGroup>) : actions
 
+                // if the table should be filtered or not
+                // if is filtered, only the users with something in the status
+                // will be displayed
                 if (props.filtered_users) {
-                    if (status != "") {
+                    if (status !== "") {
                         // create the data in the proper format to be displayed
                         users.push({
                             id: index,
@@ -82,7 +60,6 @@ function Tablee(props) {
                             number: user.employeeNumber
                         })
                     }
-
                 } else {
                     // create the data in the proper format to be displayed
                     users.push({
@@ -93,24 +70,18 @@ function Tablee(props) {
                         number: user.employeeNumber
                     })
                 }
-
             })
             // updates the state with the fformatted data
             setusers(users)
             setpending(false);
-            console.log("USERS", props.users);
         })
-
-
-
     }, [])
-
 
     // the filter text is searched in all fields of each row
     const filteredItems = users.filter(
-        item => item.user && item.user.props.children.toLowerCase().includes(filterText) ||
-            // item.pc && item.pc.includes(filterText) ||
-            item.status && item.status.props.children.toLowerCase().includes(filterText)
+        item => (
+            item.user && item.user.props.children.toLowerCase().includes(filterText) || item.status && item.status.props.children.toLowerCase().includes(filterText)
+        )
     );
 
     // COMPONENT SUBHEADER
@@ -176,4 +147,4 @@ function Tablee(props) {
     )
 };
 
-export default Tablee;
+export default UserTable;

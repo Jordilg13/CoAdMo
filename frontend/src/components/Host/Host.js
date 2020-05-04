@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { useParams } from "react-router-dom";
 import { connect } from 'react-redux'
-import DataTable from 'react-data-table-component';
 import agent from "../../agent/agent"
-import { ListGroup, ListGroupItem, Media, Spinner, Progress, Progre, Table, Badge } from 'reactstrap';
+import { ListGroup, ListGroupItem, Media, Spinner, Progress, Table, Badge } from 'reactstrap';
 import logo from "../../assets/img/computer.png"
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import { useMediaQuery } from 'react-responsive'
 
@@ -90,7 +88,7 @@ const Host = (props) => {
 
     return (
         <div>
-            <h1 style={{"display": "inline"}}>{hostname}</h1> {errors && <Badge color="danger">{errors}</Badge>}
+            <h1 style={{ "display": "inline" }}>{hostname}</h1> {errors && <Badge color="danger">{errors}</Badge>}
 
             <Row>
                 {/* display only in desktop browser, not in mobiles */}

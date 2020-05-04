@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
+import {  UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+import {  AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/big_logo_coadmo.png'
 import sygnet from '../../assets/img/brand/small_logo_coadmo.png'
 import agent from "../../agent/agent"
 import { connect } from 'react-redux'
-import jwt from "jwt-decode";
 import JwtDecode from 'jwt-decode';
+import toast from "toastr"
 
 const propTypes = {
   children: PropTypes.node,
@@ -53,14 +53,17 @@ class DefaultHeader extends Component {
       } else {
         this.props.loadToken(token, token ? agent.Auth.current() : null)
       }
+
     } else {
       console.log("LOGING OUT");
       this.props.logout()
       this.props.redirectTo("/login")
+      toast.error("Inicia sesión para ver este contenido.","Error")
     }
 
   }
-
+  
+  // check if the token is expired
   isTokenExpired = (sec) => {
     let exp_date = new Date(sec).getTime()
     let today = (new Date().getTime() / 1000)
@@ -92,8 +95,6 @@ class DefaultHeader extends Component {
 
 
   render() {
-    console.log(this.props);
-
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 

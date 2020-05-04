@@ -4,6 +4,7 @@
 //   } from '../constants/actionTypes';
 import { push } from 'react-router-redux';
 import agent from "../agent/agent"
+import toastr from 'toastr'
 
 
 
@@ -30,7 +31,13 @@ const promiseMiddleware = store => next => action => {
       },
       error => {
         action.error = true;
-        action.payload =  error.response.body;
+        try {
+          action.payload =  error.response.body;
+        } catch (error) {
+          action.payload = error
+          
+        }
+        toastr.error(error)
         
         // if the token is not valid
         if (error.response.statusCode === 403) {

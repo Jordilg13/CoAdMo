@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Button, Badge, UncontrolledAlert  } from "reactstrap"
+import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Badge  } from "reactstrap"
 import { useMediaQuery } from 'react-responsive'
 import logo from "../../assets/img/default-avatar.png"
 import agent from "../../agent/agent"

@@ -1,3 +1,191 @@
 .card_footer {
     height: 25px;
 }
+/* * {
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+} */
+/* body {
+    background: #d17762;
+    display: flex;
+} */
+.container {
+    margin: auto;
+}
+/* .a {
+    background: rgba(0, 0, 0, 0.09);
+    display: inline-block;
+    position: relative;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 30px 40px;
+} */
+.a::before, .a::after, .a span::before, .a span::after {
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    background: rgb(160, 160, 160);
+    content: "";
+    opacity: 0;
+    position: absolute;
+    transition: opacity 1s ease;
+}
+.a::before, .a::after {
+    height: 2px;
+    width: 0%;
+}
+.a::before {
+    right: 0;
+    top: 0;
+}
+.a::after {
+    bottom: 0;
+    left: 0;
+}
+.a span::before, .a span::after {
+    height: 0%;
+    width: 2px;
+}
+.a span::before {
+    left: 0;
+    top: 0;
+}
+.a span::after {
+    bottom: 0;
+    right: 0;
+}
+.a::before, .a::after, .a span::before, .a span::after {
+    opacity: 1;
+}
+.a::before {
+    animation-name: btn-border-top;
+    animation-duration: 2.8s;
+}
+.a::after {
+    animation-name: btn-border-bottom;
+    animation-delay: 0.7s;
+    animation-duration: 2.8s;
+}
+.a span::before {
+    animation-name: btn-border-span-left;
+    animation-delay: 0.35s;
+    animation-duration: 2.8s;
+}
+.a span::after {
+    animation-name: btn-border-span-right;
+    animation-delay: 1.05s;
+    animation-duration: 2.8s;
+}
+@keyframes btn-border-top {
+    0% {
+        left: auto;
+        right: 0;
+        width: 0%;
+   }
+    12.5% {
+        left: auto;
+        right: 0;
+        width: 100%;
+   }
+    12.6% {
+        left: 0;
+        right: auto;
+   }
+    50% {
+        width: 100%;
+   }
+    62.5% {
+        width: 0%;
+   }
+    100% {
+        left: 0;
+        right: auto;
+        width: 0%;
+   }
+}
+@keyframes btn-border-bottom {
+    0% {
+        right: auto;
+        left: 0;
+        width: 0%;
+   }
+    12.5% {
+        right: auto;
+        left: 0;
+        width: 100%;
+   }
+    12.6% {
+        right: 0;
+        left: auto;
+   }
+    50% {
+        width: 100%;
+   }
+    62.5% {
+        width: 0%;
+   }
+    100% {
+        right: 0;
+        left: auto;
+        width: 0%;
+   }
+}
+@keyframes btn-border-span-left {
+    0% {
+        bottom: auto;
+        top: 0;
+        height: 0%;
+   }
+    12.5% {
+        bottom: auto;
+        top: 0;
+        height: 100%;
+   }
+    12.6% {
+        bottom: 0;
+        top: auto;
+   }
+    50% {
+        height: 100%;
+   }
+    62.5% {
+        height: 0%;
+   }
+    100% {
+        bottom: 0;
+        top: auto;
+        height: 0%;
+   }
+}
+@keyframes btn-border-span-right {
+    0% {
+        top: auto;
+        bottom: 0;
+        height: 0%;
+   }
+    12.5% {
+        top: auto;
+        bottom: 0;
+        height: 100%;
+   }
+    12.6% {
+        top: 0;
+        bottom: auto;
+   }
+    50% {
+        height: 100%;
+   }
+    62.5% {
+        height: 0%;
+   }
+    100% {
+        top: 0;
+        bottom: auto;
+        height: 0%;
+   }
+}
+

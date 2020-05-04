@@ -15,7 +15,7 @@ import sys
 class ActiveDirectoryMonitor(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, hostname):
+    def get(self, request):
         response = {
             "is_up": False,
             "errors": [],

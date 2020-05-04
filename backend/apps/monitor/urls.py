@@ -6,6 +6,6 @@ urlpatterns = [
     # matches IPs and hostnames
     # E.G: 192.168.1.150 or mail.projectejordi.es
     # path("<str:service>/<str:hostname>", Monitor.as_view()),
-    path("ad/<str:hostname>", ActiveDirectoryMonitor.as_view()),
+    path("ad/", ActiveDirectoryMonitor.as_view()),
 
 ]

@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
-import { Container, Alert } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { connect } from 'react-redux'
 
 import {

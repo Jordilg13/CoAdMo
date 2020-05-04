@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 // import { renderRoutes } from 'react-router-config';
 import './App.scss';
+import 'toastr/build/toastr.min.css'
+
 
 // Redux
 import { Provider } from 'react-redux';
