@@ -52,7 +52,9 @@ const Users = {
     update: (username,data) =>
         requests.update(`/user/update/${username}`, { data: data }),
     unlock: (dn) =>
-        requests.get(`/user/unlock/${dn}`)
+        requests.get(`/user/unlock/${dn}`),
+    delete: (dn) =>
+        requests.delete(`/user/delete/${dn}`)
 }
 const Services = {
     getSpecific: (service, hostname) =>

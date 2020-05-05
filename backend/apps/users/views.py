@@ -36,7 +36,7 @@ class AllUsers(APIView):
         attrs = ["accountExpires", "cn", "displayName", "distinguishedName",
                  "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
                  "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime",
-                 "employeeNumber"]
+                 "employeeNumber", "sn"]
 
         # execute the query
         users = host.search(query_filter, attrs)
@@ -47,6 +47,7 @@ class AllUsers(APIView):
         # mark users with custom flags
         users = utils.set_flags(
             users,  host.PASSWORD_EXPIRATION_DATE.total_seconds())
+
 
         # close the connection when the operation is done
         host.conn.unbind_s()
@@ -78,9 +79,10 @@ class User(APIView):
         query_filter = "(&(objectClass=user)(sAMAccountName={}))".format(
             username)
         # return the attributes that matches with the given arguments
-        attrs = ["accountExpires", "cn", "displayName", "distinguishedName", "givenName",
-                 "pwdLastSet", "sAMAccountName", "userAccountControl",
-                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime", "sn"]
+        attrs = ["accountExpires", "cn", "displayName", "distinguishedName",
+                 "givenName", "pwdLastSet", "sAMAccountName", "userAccountControl",
+                 "userPrincipalName", "whenChanged", "whenCreated", "lockoutTime",
+                 "employeeNumber", "sn"]
 
         # execute the query
         ad_user_info = host.search(query_filter, attrs)
@@ -139,7 +141,7 @@ class CreateUser(APIView):
 class DeleteUser(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def delete(self, request, username):
+    def delete(self, request, cn):
         host = ActiveDirectory()
         return Response(host.deleteUser(cn))
 

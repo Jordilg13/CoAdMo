@@ -75,9 +75,10 @@ class ActiveDirectory():
         Creates a new user with the recieved data
         '''
         conn = PowerShell()
-        command = "New-ADUser -Name '{}' -GivenName '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(
+        command = "New-ADUser -Name '{}' -GivenName '{}' -Surname '{}' -SamAccountName '{}' -UserPrincipalName '{}' -Path '{}' -AccountPassword (ConvertTo-SecureString '{}' -AsPlainText -force) -Enabled $true".format(
             data['cn'],
             data['givenName'],
+            data['sn'],
             data['sAMAccountName'],
             data['userPrincipalName'],
             self.base,

@@ -19,43 +19,50 @@ function UserTable(props) {
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
     const [users, setusers] = useState([]);
     const [pending, setpending] = useState(true);
+    const [refreshUsers, setRefreshUsers] = useState(0)
+
+    const forceRefreshUsers = () => setRefreshUsers(refreshUsers + 1)
 
     // componentdidmount like behavior
     useEffect(() => {
-
         agent.Users.getAll().then(users => {
             console.log("UserTable -> users", users)
             users.map((user, index) => {
-                let status = ""
+                let status = []
                 // default actions
                 let actions = (
                     <ButtonGroup>
-                        <UserForm action="update" user={user} />
-                        <DeleteUser user={user} />
+                        <UserForm action="update" user={user} handleRefresh={forceRefreshUsers} />
+                        <DeleteUser user={user} handleRefresh={forceRefreshUsers} />
                     </ButtonGroup>)
 
                 // adds the flags
-                status = user.isExpired ? <Badge color="warning">Caducado</Badge> : status
-                status = user.isBlocked ? <Badge color="danger">Bloqueado</Badge> : status
+                user.isExpired && status.push(<Badge key={Math.random()} color="warning">Caducado</Badge>)
+                user.isBlocked && status.push(<Badge key={Math.random()} color="danger">Bloqueado</Badge>)
+                user.isDisabled && status.push(<Badge key={Math.random()} color="info">Deshabilitado</Badge>)
+
+                let final_status = status.map(state => state)
 
                 // adds the actions
                 actions = user.isBlocked ? (
                     <ButtonGroup>
-                        <UnlockUser user={user} />
-                        <UserForm action="update" user={user} />
-                        <DeleteUser user={user} />
+                        <UnlockUser user={user} handleRefresh={forceRefreshUsers} />
+                        <UserForm action="update" user={user} handleRefresh={forceRefreshUsers} />
+                        <DeleteUser user={user} handleRefresh={forceRefreshUsers} />
                     </ButtonGroup>) : actions
 
                 // if the table should be filtered or not
                 // if is filtered, only the users with something in the status
                 // will be displayed
                 if (props.filtered_users) {
-                    if (status !== "") {
+                    console.log(status.props?.children);
+
+                    if (status.props?.children === "Bloqueado" || status.props?.children === "Caducado") {
                         // create the data in the proper format to be displayed
                         users.push({
                             id: index,
                             user: <a href={`/user/${user.sAMAccountName}`}>{user.sAMAccountName}</a>,
-                            status: status,
+                            status: final_status,
                             actions: actions,
                             number: user.employeeNumber
                         })
@@ -65,7 +72,7 @@ function UserTable(props) {
                     users.push({
                         id: index,
                         user: <a href={`/user/${user.sAMAccountName}`}>{user.sAMAccountName}</a>,
-                        status: status,
+                        status: final_status,
                         actions: actions,
                         number: user.employeeNumber
                     })
@@ -75,13 +82,17 @@ function UserTable(props) {
             setusers(users)
             setpending(false);
         })
-    }, [])
+    }, [refreshUsers])
 
     // the filter text is searched in all fields of each row
     const filteredItems = users.filter(
-        item => (
-            item.user && item.user.props.children.toLowerCase().includes(filterText) || item.status && item.status.props.children.toLowerCase().includes(filterText)
-        )
+        item => {
+            // if the name of the user contains the searched text, or if any of the badges of status contains it
+            return item.user && item.user.props.children.toLowerCase().includes(filterText) ||
+                item.status && item.status.map(elem => {
+                    return elem?.props.children.toLowerCase().includes(filterText)
+                }).includes(true)
+        }
     );
 
     // COMPONENT SUBHEADER
@@ -95,7 +106,7 @@ function UserTable(props) {
         return (
             // SUBHEADER OF THE DATATABLE (search bar and add user btn)
             <>
-                <UserForm action="create" style={{ position: "absolute", top: "-40px", right: "16px" }} />
+                <UserForm action="create" style={{ position: "absolute", top: "-40px", right: "16px" }} handleRefresh={forceRefreshUsers} />
                 <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
             </>);
     }, [filterText, resetPaginationToggle]);
@@ -112,7 +123,7 @@ function UserTable(props) {
                     (
                         <Table>
                             <tr>
-                                <th>Desbloquear Usuario <UserForm action="create" /></th>
+                                <th>Desbloquear Usuario <UserForm action="create" handleRefresh={forceRefreshUsers} /></th>
                             </tr>
                             <tr>
                                 <td><Button color="success" >username1</Button></td>

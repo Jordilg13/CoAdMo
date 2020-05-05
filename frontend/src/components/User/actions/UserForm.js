@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { updateUser } from '../../UserTable/utils'
 import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Form, FormGroup, Label, Input, Row, Col, InputGroupAddon, InputGroup, InputGroupText } from 'reactstrap';
 // FONTAWESOME
@@ -30,7 +30,7 @@ export const UserForm = (props) => {
         event.preventDefault();
 
         if (isUpdate) {
-            updateUser(event, props.user)
+            updateUser(event, props.user, toggle, props.handleRefresh)
         } else {
             setjustifyData(event.target)
             toggleJ()
@@ -38,23 +38,29 @@ export const UserForm = (props) => {
 
     }
 
-
     return (
         <div>
             {isUpdate ? updatebtn : createbtn}
 
-            {!isUpdate && <JustifyAction show={justifyModal} toggle={toggleJ} formdata={justifyData} userhandler={toggle}/>}
+            {!isUpdate && <JustifyAction show={justifyModal} toggle={toggleJ} formdata={justifyData} userhandler={toggle} />}
 
             <Modal isOpen={modal} toggle={toggle} className={'modal-lg ' + 'modal-primary ' + props.classes}>
                 <ModalHeader toggle={toggle}>Añadir Usuario</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={submitUserForm} id="create-user-form">
                         <Row>
-                            <Col xs="12" sm="12" lg="12">
+                            <Col xs="12" sm="12" lg="6">
                                 <FormGroup>
-                                    <Label for="cn">Name</Label>
+                                    <Label for="cn">Nombre</Label>
                                     <Input type="text" name="cn" id="cn" placeholder="CommonName"
-                                        defaultValue={isUpdate ? props.user.cn : ""} required />
+                                        defaultValue={isUpdate ? props.user.cn : ""} required disabled={isUpdate} />
+                                </FormGroup>
+                            </Col>
+                            <Col xs="12" sm="12" lg="6">
+                                <FormGroup>
+                                    <Label for="sn">Apellidos</Label>
+                                    <Input type="text" name="sn" id="sn" placeholder="Apellidos"
+                                        defaultValue={isUpdate ? props.user.sn : ""} />
                                 </FormGroup>
                             </Col>
                         </Row>

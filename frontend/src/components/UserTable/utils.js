@@ -1,5 +1,6 @@
 import orderBy from 'lodash/orderBy';
 import agent from "../../agent/agent"
+import toast from "toastr"
 
 // COLUMNS THAT WILL HAVE THE DATATABLE
 export const columns = [
@@ -28,9 +29,13 @@ export const customSort = (rows, field, direction) => {
     // ORDER BY THIS FIELD
     if (field) {
         const handleField = row => {
+            console.log("customSort -> field", field)
+            console.log("customSort -> row", row)
+
             if (!row[field]) return "" // if the value is empty
             // if the field is status or user, check the props.children value
-            if (field === "status" || field === "user") return row[field].props.children; 
+            if (field === "status" ) return row[field][0]?.props.children;
+            if (field === "user") return row[field].props.children;
             return row[field]; // any other case sort by the normal value of the field
         };
         return orderBy(rows, handleField, direction);
@@ -40,12 +45,11 @@ export const customSort = (rows, field, direction) => {
         const handleField = row => {
             if (!row[field]) return "" // if the value is empty
             // if the user is blocked, put at the top of the list
-            if (row["status"].props.children === "Bloqueado") return row["status"].props.children
+            if (row["status"].props.children === "Bloqueado") return row["status"][0].props.children
             return row["name"] // any other case sort by name
         };
         return orderBy(rows, handleField, "desc");
     }
-
 };
 
 
@@ -80,7 +84,7 @@ export const createUser = (e, formdata, toggleJust, toggleUserInfo) => {
 
 }
 
-export const updateUser = (e, data) => {
+export const updateUser = (e, data, toggle, refresh) => {
     let new_data = {}
 
     e.target.forEach(element => {
@@ -91,10 +95,14 @@ export const updateUser = (e, data) => {
         }
     });
 
-    console.log("updateUser -> new_data", new_data)
+    console.log("updateUser -> e", e.target[0].value)
     agent.Users.update(data['distinguishedName'], new_data).then(data => {
         console.log(data);
-
+        if (data == 2) {
+            toggle()
+            toast.success("Usuario actualizado correctamente.", "Actualizado")
+            refresh()
+        }
     })
 
 

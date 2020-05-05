@@ -11,9 +11,9 @@ port = 389
 base = "dc=projectejordi,dc=es"
 scope = ldap.SCOPE_SUBTREE
 
-filterr = "(&(objectClass=user))"
+filterr = "(&(objectClass=user)(sAMAccountName=Aaa))"
 # filterr = "(&(objectClass=user)(UserAccountControl=514))"
-attrs = ["*"]
+attrs = ["sn"]
 
 l = ldap.initialize(server)
 l.protocol_version = 3

@@ -15,6 +15,7 @@ def format_data(users):
     Format the data removing extra and unecessary arrays
     """
     users = [i[1] for i in users]
+    print(users)
     for i in users:
         for j in i:
             i[j] = i[j][0].decode("utf-8")
@@ -46,4 +47,6 @@ def set_flags(users, expiration_time):
         if i['pwdLastSet'] != 0 and i['userAccountControl'] != "66048" and today > exp_date:
             i['isExpired'] = True
 
+        if i['userAccountControl'] == '514':
+            i['isDisabled'] = True
     return users

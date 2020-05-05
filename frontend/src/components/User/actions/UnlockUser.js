@@ -7,19 +7,21 @@ import agent from '../../../agent/agent'
 import toastr from 'toastr'
 
 export const UnlockUser = (props) => {
+
     const unlockUser = () => {
-        console.log(props.user);
-        agent.Users.unlock(props.user.distinguishedName).then((data) => {
-            // window.location.reload(true)
-            toastr.success(`El usuario ${props.user.cn} ha sido desbloqueado correctamente.`,"Desbloqueado")
+
+        agent.Users.unlock(props.user.distinguishedName).then(data => {
+            if (data == 2) {
+                toastr.success(`El usuario ${props.user.cn} ha sido desbloqueado correctamente.`, "Desbloqueado")
+                props.handleRefresh()
+            }
         })
     }
+    
     return (
         <div>
             <Button color="secondary" onClick={unlockUser}>
-                <FontAwesomeIcon
-                    icon={faUnlockAlt}
-                />
+                <FontAwesomeIcon icon={faUnlockAlt} />
             </Button>
 
         </div>

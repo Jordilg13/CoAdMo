@@ -6,7 +6,6 @@ import toastr from "toastr"
 
 // COLORS: primary, secondary, success, danger, warning, info, light, dark
 export const StaticStateCard = (props) => {
-    console.log("StateCard -> props", props)
     const [popoverOpen, setPopoverOpen] = useState(false)
 
 
