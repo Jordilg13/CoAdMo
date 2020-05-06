@@ -33,6 +33,11 @@ export default {
           icon: 'icon-puzzle'
         },
       ]
-    }
+    },
+    {
+      name: 'Conexiones',
+      url: '/db',
+      icon: 'icon-puzzle'
+    },
   ],
 };

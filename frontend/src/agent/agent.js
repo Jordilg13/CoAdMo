@@ -61,7 +61,6 @@ const Services = {
         requests.get(`/monitor/${service}/${hostname}`),
     getDefault: (service) =>
         requests.get(`/monitor/${service}`),
-    
 }
 
 export default {

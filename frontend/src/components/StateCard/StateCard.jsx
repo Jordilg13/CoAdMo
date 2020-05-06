@@ -24,7 +24,7 @@ export const StateCard = (props) => {
                 description: "Estado desconocido",
                 po_desc: "La petición al servidor ha fallado. Por favor, compruebe manualmente.",
             })
-            toastr.error(err, props.name)
+            // toastr.error(err, props.name)
         })
     }, [props.name, props.prom])
 

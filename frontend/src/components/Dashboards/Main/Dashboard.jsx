@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import StateCard from '../../StateCard/StateCard'
-import { Row, Col } from 'reactstrap'
+import { Row, Col, CardBody } from 'reactstrap'
 import UserTable from '../../UserTable/UserTable'
 import agent from "../../../agent/agent"
 import { connect } from 'react-redux'
 import { services } from "./services"
+import SqlConnectionsTable from '../../SqlMonitor'
+import { Card, CardHeader } from '@material-ui/core'
+
 
 
 const mapStateToProps = (state) => ({
@@ -45,7 +48,17 @@ const Dashboard = (props) => {
             <Row>
                 {servicesStatus.length > 0 && servicesStatus} {/* STATUS TABS */}
             </Row>
-            <UserTable filtered_users={true} />
+            <Row>
+                <Col xs="12" sm="6" lg="6">
+                    <SqlConnectionsTable />
+                </Col>
+
+                <Col xs="12" sm="12" lg="12" style={{marginTop:"20px"}}>
+                    <UserTable filtered_users={true} />
+                </Col>
+
+
+            </Row>
         </div>
     )
 
