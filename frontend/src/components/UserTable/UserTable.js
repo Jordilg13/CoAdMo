@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import DataTable from 'react-data-table-component';
 import { Badge, Button, Table, ButtonGroup } from 'reactstrap';
 import { useMediaQuery } from 'react-responsive'
@@ -6,11 +7,18 @@ import { FilterComponent } from "./FilterComponent";
 // USERS
 import { UnlockUser } from '../User/actions/UnlockUser';
 // DATATABE
-import { customSort, columns } from "./utils"
+import { customSort, columns, columnsMobile } from "./utils"
 import { DeleteUser } from '../User/actions/DeleteUser';
 import { UserForm } from '../User/actions/UserForm';
 import agent from '../../agent/agent';
 import LinearIndeterminate from "./LinearIndeterminate"
+
+const mapStateToProps = state => ({ ...state });
+
+const mapDispatchToProps = dispatch => ({
+    getUsers: () =>
+        dispatch({ type: "GET_USERS", payload: agent.Users.getAll() })
+});
 
 
 function UserTable(props) {
@@ -23,11 +31,17 @@ function UserTable(props) {
 
     const forceRefreshUsers = () => setRefreshUsers(refreshUsers + 1)
 
+    
     // componentdidmount like behavior
     useEffect(() => {
-        agent.Users.getAll().then(users => {
-            console.log("UserTable -> users", users)
-            users.map((user, index) => {
+        props.getUsers()
+    }, [refreshUsers])
+
+    // when users are setted
+    useEffect(() => {
+        if (props.users.users) {
+            console.log("UserTable -> users", props.users.users)
+            props.users.users.map((user, index) => {
                 let status = []
                 // default actions
                 let actions = (
@@ -55,7 +69,6 @@ function UserTable(props) {
                 // if is filtered, only the users with something in the status
                 // will be displayed
                 if (props.filtered_users) {
-                    console.log(status.props?.children);
 
                     if (status.props?.children === "Bloqueado" || status.props?.children === "Caducado") {
                         // create the data in the proper format to be displayed
@@ -81,8 +94,8 @@ function UserTable(props) {
             // updates the state with the fformatted data
             setusers(users)
             setpending(false);
-        })
-    }, [refreshUsers])
+        }
+    }, [props.users.users])
 
     // the filter text is searched in all fields of each row
     const filteredItems = users.filter(
@@ -113,7 +126,7 @@ function UserTable(props) {
 
 
 
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 700px)' })
 
     return (
         <>
@@ -121,25 +134,8 @@ function UserTable(props) {
             {
                 isTabletOrMobile ?
                     (
-                        <Table>
-                            <tr>
-                                <th>Desbloquear Usuario <UserForm action="create" handleRefresh={forceRefreshUsers} /></th>
-                            </tr>
-                            <tr>
-                                <td><Button color="success" >username1</Button></td>
-                            </tr>
-                            <tr>
-                                <td><Button color="success" >username2</Button></td>
-                            </tr>
-                            <tr>
-                                <td><Button color="success" disabled>username3</Button></td>
-                            </tr>
-                        </Table>
-                        // <></>
-                    ) : (<>
-                        {/* DATATABLE WITH USERS */}
                         <DataTable
-                            columns={columns}
+                            columns={columnsMobile}
                             data={filteredItems}
                             pagination
                             paginationResetDefaultPage={resetPaginationToggle}
@@ -150,7 +146,22 @@ function UserTable(props) {
                             progressPending={pending}
                             progressComponent={<LinearIndeterminate />}
                         />
-                    </>)
+                    ) : (
+                        <>
+                            {/* DATATABLE WITH USERS */}
+                            <DataTable
+                                columns={columns}
+                                data={filteredItems}
+                                pagination
+                                paginationResetDefaultPage={resetPaginationToggle}
+                                sortFunction={customSort}
+                                subHeader
+                                subHeaderComponent={subHeaderComponentMemo}
+                                persistTableHead
+                                progressPending={pending}
+                                progressComponent={<LinearIndeterminate />}
+                            />
+                        </>)
 
 
             }
@@ -158,4 +169,4 @@ function UserTable(props) {
     )
 };
 
-export default UserTable;
+export default connect(mapStateToProps, mapDispatchToProps)(UserTable)

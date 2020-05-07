@@ -15,7 +15,6 @@ def format_data(users):
     Format the data removing extra and unecessary arrays
     """
     users = [i[1] for i in users]
-    print(users)
     for i in users:
         for j in i:
             i[j] = i[j][0].decode("utf-8")

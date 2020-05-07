@@ -1,51 +1,55 @@
-import React, { Component, Suspense } from 'react'
-import { Row, Col, Spinner } from 'reactstrap'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+
+import { Row, Col, Spinner, CardGroup, CardHeader, CardBody, Progress } from 'reactstrap'
 import UserTable from '../../UserTable/UserTable'
 import StaticStateCard from '../../StateCard/StaticStateCard'
+import { Card } from '@material-ui/core'
 
-export class Dashboard extends Component {
-    constructor(props) {
-        super(props)
+const mapStateToProps = state => ({ ...state });
 
-        this.state = {
-            counted_users: {
-                count_blocked_users: 0,
-                count_expired_users: 0,
-            },
-            users: []
-        }
+const mapDispatchToProps = dispatch => ({
 
+});
+
+
+const Dashboard = (props) => {
+
+    console.log(props);
+
+    const countUsers = (param) => {
+        return props.users.users.filter(u => u[param]).length
     }
-    // TODO: change users to Redux
 
-    render() {
 
-        return (
-            <div>
-                <Row>
-                    <Col xs="6" sm="6" lg="6">
-                        <StaticStateCard
-                            name="Bloqueados"
-                            description={this.state.users.length === 0 ? (<Spinner size="sm" />) : this.state.counted_users.count_blocked_users}
-                            color="danger"
-                            po_desc=""
-                        />
-                    </Col>
-                    <Col xs="6" sm="6" lg="6">
-                        <StaticStateCard
-                            name="Cacucados"
-                            description={this.state.users.length === 0 ? (<Spinner size="sm" />) : this.state.counted_users.count_expired_users}
-                            color="warning"
-                            po_desc=""
-                        />
-                    </Col>
+    return (
+        <div>
+            <Row>
+                <Col xs="6" sm="6" lg="6">
+                    <StaticStateCard
+                        name="Bloqueados"
+                        description={props.users.users ? countUsers("isBlocked") : (<Spinner size="sm" />)}
+                        color="danger"
+                        po_desc=""
+                    />
 
-                    <UserTable />
+                </Col>
+                <Col xs="6" sm="6" lg="6">
+                    <StaticStateCard
+                        name="Cacucados"
+                        description={props.users.users ? countUsers("isExpired") : (<Spinner size="sm" />)}
+                        color="warning"
+                        po_desc=""
+                    />
+                </Col>
 
-                </Row>
-            </div>
-        )
-    }
+                <UserTable />
+
+            </Row>
+        </div>
+    )
+
 }
 
-export default Dashboard
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+

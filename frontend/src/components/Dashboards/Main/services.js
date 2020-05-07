@@ -4,19 +4,14 @@ export const services = [
         "healthcheck": "ad"
     },
     {
-        "name": "Unexistent Service",
-        "hostname": "asdf",
-        "healthcheck": "ad"
-    },
-    {
         "name": "Sistema EXG",
         "hostname": "192.168.1.150",
-        "type": "exg"
+        "healthcheck": "exg"
     },
     {
         "name": "Sistema IIS",
         "hostname": "192.168.1.150",
-        "type": "iis"
+        "healthcheck": "iis"
     },
     // {
     //     "name": "Sistemas Ficheros",

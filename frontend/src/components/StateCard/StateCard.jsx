@@ -12,7 +12,6 @@ export const StateCard = (props) => {
     // resolve the promise
     useEffect(() => {
         props.prom.then(data => {
-            console.log("StateCard -> data", data)
             setServiceStatus({
                 color: data.is_up ? "success" : "danger",
                 description: data.errors > 0 ? "Hay errores" : "Correcto",

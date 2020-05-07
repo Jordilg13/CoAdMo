@@ -4,6 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { Card } from '@material-ui/core';
 import { CardHeader, CardBody } from 'reactstrap';
+import colors from "./colors"
 
 
 let initial_data = {
@@ -17,6 +18,10 @@ const options = {
     custom: CustomTooltips
   },
   maintainAspectRatio: true,
+  legend: {
+    display: false,
+  },
+  responsive: true,
   scales: {
     yAxes: [{
       ticks: {
@@ -44,16 +49,17 @@ const SqlConnectionsTable = (props) => {
     let data = finalData
 
     if (barInfo) {
-      barInfo.map(app => {
+      barInfo.map((app,index) => {
         app['aplicacion'] = app['aplicacion'].trim()
         !data.labels.includes(app['bbdd']) && data.labels.push(app['bbdd'])
-        
+
         // adds a new stack only if the app isn't in the array yet
-        data.datasets.filter(e => e.label==app['aplicacion']).length == 0 && data.datasets.push({
+        data.datasets.filter(e => e.label == app['aplicacion']).length == 0 && data.datasets.push({
           stack: "stack",
           label: app['aplicacion'],
           data: [],
-          backgroundColor: `rgba(${Math.random() * (255 - 1) + 1},${Math.random() * (255 - 1) + 1},${Math.random() * (255 - 1) + 1},0.6)`,
+          backgroundColor:  colors[index],
+          hoverBackgroundColor:  colors[index].replace("0.6", "0.8"),
         })
       })
 
@@ -65,7 +71,7 @@ const SqlConnectionsTable = (props) => {
             data.datasets.map((ds, index_ds) => {
 
               if (ds.label == app['aplicacion']) {
-                data.datasets[index_ds].data[index_db] = app['n_conexiones']           
+                data.datasets[index_ds].data[index_db] = app['n_conexiones']
               }
             })
           }

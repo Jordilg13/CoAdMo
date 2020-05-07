@@ -203,7 +203,6 @@ class BaseHost():
                 break
 
         for sk in subkeys:
-            # print(sk)
             programs.append({})
             path = key_path+"\\"+sk
             key = wr.OpenKey(rem_reg, path, 0, wr.KEY_READ |

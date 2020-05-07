@@ -1,5 +1,5 @@
 import { applyMiddleware, createStore } from 'redux';
-import { promiseMiddleware, localStorageMiddleware } from '../middlewares/middleware';
+import { promiseMiddleware, localStorageMiddleware, usersMiddleware } from '../middlewares/middleware';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import reducer from '../reducers';
 import { createBrowserHistory as createHistory } from 'history'
@@ -11,5 +11,12 @@ const myRouterMiddleware = routerMiddleware(history);
 
 export const store = createStore(
     reducer,
-    composeWithDevTools(applyMiddleware(myRouterMiddleware, promiseMiddleware, localStorageMiddleware)),
+    composeWithDevTools(
+        applyMiddleware(
+            usersMiddleware,
+            myRouterMiddleware,
+            promiseMiddleware,
+            localStorageMiddleware,
+        )
+    ),
 );

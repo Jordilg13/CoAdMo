@@ -23,6 +23,20 @@ export const columns = [
     },
 ];
 
+export const columnsMobile = [
+    {
+        name: 'Usuario',
+        selector: 'user',
+        sortable: true,
+    },
+    {
+        name: 'Acciones',
+        selector: 'actions',
+        sortable: true,
+        right: true,
+    },
+];
+
 // if it's sorted by state, return the string of the badge, not the element badge
 export const customSort = (rows, field, direction) => {
     // IF IS CLICKED ON A FIELD
