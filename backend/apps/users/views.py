@@ -115,7 +115,9 @@ class UnlockUser(APIView):
         host = ActiveDirectory()
         result = host.modify(cn, {"lockoutTime": "0"})
         host.conn.unbind_s()
-        # TODO: add logging system
+        savelog = Logs(service="activedirectory", description="unlocked user: "+cn,
+                       justification="")
+        savelog.save()  # save log in the db
 
         return Response(result)
 
@@ -143,7 +145,13 @@ class DeleteUser(APIView):
 
     def delete(self, request, cn):
         host = ActiveDirectory()
-        return Response(host.deleteUser(cn))
+
+        deleted = host.deleteUser(cn)
+        savelog = Logs(service="activedirectory", description="deleted user: "+cn,
+                       justification="")
+        savelog.save()  # save log in the db
+
+        return Response(deleted)
 
 
 class UpdateUser(APIView):
@@ -154,9 +162,9 @@ class UpdateUser(APIView):
         result = host.modify(dn, request.data['data'])
         host.conn.unbind_s()
 
-        # savelog = Logs(service="activedirectory", description="se crea el usuario jllopis en la tabla empleadoss",
-        #                justification="perque van a contratar-lo i a pagar-li 15000 euros al mes")
-        # savelog.save()  # save log in the db
+        savelog = Logs(service="activedirectory", description="updated user: "+dn,
+                       justification="")
+        savelog.save()  # save log in the db
 
         return Response(result)
 
