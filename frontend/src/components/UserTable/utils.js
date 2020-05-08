@@ -1,6 +1,7 @@
 import orderBy from 'lodash/orderBy';
 import agent from "../../agent/agent"
 import toast from "toastr"
+import { store } from "../../store/store"
 
 // COLUMNS THAT WILL HAVE THE DATATABLE
 export const columns = [
@@ -48,7 +49,7 @@ export const customSort = (rows, field, direction) => {
 
             if (!row[field]) return "" // if the value is empty
             // if the field is status or user, check the props.children value
-            if (field === "status" ) return row[field][0]?.props.children;
+            if (field === "status") return row[field][0]?.props.children;
             if (field === "user") return row[field].props.children;
             return row[field]; // any other case sort by the normal value of the field
         };
@@ -93,12 +94,14 @@ export const createUser = (e, formdata, toggleJust, toggleUserInfo) => {
         console.log(data);
         toggleJust()
         toggleUserInfo()
+        toast.success("Usuario creado correctamente.", "Creado")
+        store.dispatch({ type: "GET_USERS", payload: agent.Users.getAll() })
     })
 
 
 }
 
-export const updateUser = (e, data, toggle, refresh) => {
+export const updateUser = (e, data, toggle) => {
     let new_data = {}
 
     e.target.forEach(element => {
@@ -115,7 +118,7 @@ export const updateUser = (e, data, toggle, refresh) => {
         if (data == 2) {
             toggle()
             toast.success("Usuario actualizado correctamente.", "Actualizado")
-            refresh()
+            store.dispatch({ type: "GET_USERS", payload: agent.Users.getAll() })
         }
     })
 

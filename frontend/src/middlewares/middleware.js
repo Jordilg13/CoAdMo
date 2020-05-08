@@ -13,7 +13,7 @@ const promiseMiddleware = store => next => action => {
 
 
   if (isPromise(action.payload)) {
-    console.log("MIDDLEWARE", action);
+    // console.log("MIDDLEWARE", action);
     // store.dispatch({ type: ASYNC_START, subtype: action.type });
 
     action.payload.then(
@@ -76,12 +76,9 @@ const usersMiddleware = store => next => action => {
     if (isPromise(action.payload)) {
       action.payload.then(
         res => {
-          console.log('MIDDLEWARE_RESULT', res);
-
-          action.payload = res;
+          // console.log('MIDDLEWARE_RESULT', res);
+          action.payload = res;          
           store.dispatch(action);
-
-
         },
         error => {
           action.error = true;

@@ -15,8 +15,6 @@ const mapDispatchToProps = dispatch => ({
 
 const Dashboard = (props) => {
 
-    console.log(props);
-
     const countUsers = (param) => {
         return props.users.users.filter(u => u[param]).length
     }

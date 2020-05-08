@@ -5,11 +5,11 @@ import { Badge, Button, Table, ButtonGroup } from 'reactstrap';
 import { useMediaQuery } from 'react-responsive'
 import { FilterComponent } from "./FilterComponent";
 // USERS
-import { UnlockUser } from '../User/actions/UnlockUser';
+import UnlockUser from '../User/actions/UnlockUser';
+import DeleteUser from '../User/actions/DeleteUser';
+import UserForm from '../User/actions/UserForm';
 // DATATABE
 import { customSort, columns, columnsMobile } from "./utils"
-import { DeleteUser } from '../User/actions/DeleteUser';
-import { UserForm } from '../User/actions/UserForm';
 import agent from '../../agent/agent';
 import LinearIndeterminate from "./LinearIndeterminate"
 
@@ -31,23 +31,23 @@ function UserTable(props) {
 
     const forceRefreshUsers = () => setRefreshUsers(refreshUsers + 1)
 
-    
+
     // componentdidmount like behavior
     useEffect(() => {
         props.getUsers()
-    }, [refreshUsers])
+    }, [])
 
     // when users are setted
     useEffect(() => {
+        let users = [];
         if (props.users.users) {
-            console.log("UserTable -> users", props.users.users)
             props.users.users.map((user, index) => {
                 let status = []
                 // default actions
                 let actions = (
                     <ButtonGroup>
-                        <UserForm action="update" user={user} handleRefresh={forceRefreshUsers} />
-                        <DeleteUser user={user} handleRefresh={forceRefreshUsers} />
+                        <UserForm action="update" user={user} />
+                        <DeleteUser user={user} />
                     </ButtonGroup>)
 
                 // adds the flags
@@ -60,24 +60,25 @@ function UserTable(props) {
                 // adds the actions
                 actions = user.isBlocked ? (
                     <ButtonGroup>
-                        <UnlockUser user={user} handleRefresh={forceRefreshUsers} />
-                        <UserForm action="update" user={user} handleRefresh={forceRefreshUsers} />
-                        <DeleteUser user={user} handleRefresh={forceRefreshUsers} />
+                        <UnlockUser user={user} />
+                        <UserForm action="update" user={user} />
+                        <DeleteUser user={user} />
                     </ButtonGroup>) : actions
 
                 // if the table should be filtered or not
                 // if is filtered, only the users with something in the status
                 // will be displayed
                 if (props.filtered_users) {
-
-                    if (status.props?.children === "Bloqueado" || status.props?.children === "Caducado") {
+                    
+                    console.log("UserTable -> props.filtered_users", user)
+                    // if its blocked or expired will be displayed, but not if its disabled, thats not a problem
+                    if (status.some(s => s.props.children == "Bloqueado" || s.props.children == "Caducado") && user.userAccountControl !== "514") {
                         // create the data in the proper format to be displayed
                         users.push({
                             id: index,
                             user: <a href={`/user/${user.sAMAccountName}`}>{user.sAMAccountName}</a>,
                             status: final_status,
                             actions: actions,
-                            number: user.employeeNumber
                         })
                     }
                 } else {
@@ -87,7 +88,6 @@ function UserTable(props) {
                         user: <a href={`/user/${user.sAMAccountName}`}>{user.sAMAccountName}</a>,
                         status: final_status,
                         actions: actions,
-                        number: user.employeeNumber
                     })
                 }
             })
@@ -119,7 +119,7 @@ function UserTable(props) {
         return (
             // SUBHEADER OF THE DATATABLE (search bar and add user btn)
             <>
-                <UserForm action="create" style={{ position: "absolute", top: "-40px", right: "16px" }} handleRefresh={forceRefreshUsers} />
+                <UserForm action="create" style={{ position: "absolute", top: "-40px", right: "16px" }} />
                 <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
             </>);
     }, [filterText, resetPaginationToggle]);

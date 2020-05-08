@@ -8,7 +8,7 @@ import { JustifyAction } from './JustifyAction';
 
 
 
-export const UserForm = (props) => {
+const UserForm = (props) => {
     // STATE
     const [showPassword, setshowPassword] = useState(false)
     const [modal, setModal] = useState(false);
@@ -30,7 +30,7 @@ export const UserForm = (props) => {
         event.preventDefault();
 
         if (isUpdate) {
-            updateUser(event, props.user, toggle, props.handleRefresh)
+            updateUser(event, props.user, toggle)
         } else {
             setjustifyData(event.target)
             toggleJ()
@@ -124,3 +124,5 @@ export const UserForm = (props) => {
         </div>
     )
 }
+
+export default UserForm
