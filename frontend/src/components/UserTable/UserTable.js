@@ -1,17 +1,25 @@
+import { Badge, Button, ButtonGroup, Table } from 'reactstrap';
 import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { columns, columnsMobile, customSort } from "./utils"
+
 import DataTable from 'react-data-table-component';
-import { Badge, Button, Table, ButtonGroup } from 'reactstrap';
-import { useMediaQuery } from 'react-responsive'
-import { FilterComponent } from "./FilterComponent";
-// USERS
-import UnlockUser from '../User/actions/UnlockUser';
 import DeleteUser from '../User/actions/DeleteUser';
-import UserForm from '../User/actions/UserForm';
-// DATATABE
-import { customSort, columns, columnsMobile } from "./utils"
-import agent from '../../agent/agent';
+import { FilterComponent } from "./FilterComponent";
 import LinearIndeterminate from "./LinearIndeterminate"
+import UnlockUser from '../User/actions/UnlockUser';
+import UserForm from '../User/actions/UserForm';
+import agent from '../../agent/agent';
+import { connect } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
+
+// USERS
+
+
+
+// DATATABE
+
+
+
 
 const mapStateToProps = state => ({ ...state });
 
@@ -69,8 +77,6 @@ function UserTable(props) {
                 // if is filtered, only the users with something in the status
                 // will be displayed
                 if (props.filtered_users) {
-                    
-                    console.log("UserTable -> props.filtered_users", user)
                     // if its blocked or expired will be displayed, but not if its disabled, thats not a problem
                     if (status.some(s => s.props.children == "Bloqueado" || s.props.children == "Caducado") && user.userAccountControl !== "514") {
                         // create the data in the proper format to be displayed

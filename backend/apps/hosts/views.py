@@ -21,6 +21,7 @@ class Host(APIView):
             # new basehost with his monitor operations
             host = BaseHost(request, hostname)
         except wmi.x_wmi as x:
+            print(x)
             return Response({
                 "error": True,
                 "msg": x.com_error.excepinfo[2]
@@ -35,8 +36,11 @@ class Host(APIView):
         # then the response will be { "cpu_usage": host.cpu_usage() }
         # resolving it, { "cpu_usage": "0" }
 
+        # TODO: change this because it makes no sense send the parameter name
+        # cause when u do the request, u know what are expecting ffor
         response = {
             parameter: getattr(host, parameter)()
         }
+
 
         return Response(response)

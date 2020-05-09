@@ -1,7 +1,5 @@
-import superagentPromise from 'superagent-promise';
 import _superagent from 'superagent';
-
-
+import superagentPromise from 'superagent-promise';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
@@ -40,16 +38,21 @@ const Auth = {
 const Host = {
     get: (hostname, property) =>
         requests.get(`/host/${hostname}/${property}`),
+    shutdown: (hostname) =>
+        requests.get(`/host/${hostname}/shutdown`),
+    restart: (hostname) =>
+        requests.get(`/host/${hostname}/restart`)
 }
+
 
 const Users = {
     getAll: () =>
         requests.get("/users"),
     get: username =>
         requests.get(`/user/${username}`),
-    create: (username,data) =>
+    create: (username, data) =>
         requests.post(`/user/create/${username}`, { data: data }),
-    update: (username,data) =>
+    update: (username, data) =>
         requests.update(`/user/update/${username}`, { data: data }),
     unlock: (dn) =>
         requests.get(`/user/unlock/${dn}`),

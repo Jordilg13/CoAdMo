@@ -140,7 +140,7 @@ class BaseHost():
 
         # -----------------------NETWORK-----------------------
         search_class = "Win32_NetworkAdapterConfiguration"
-        props = ["Description", "IPAddress", "DefaultIPGateway"]
+        props = ["Description", "IPAddress", "DefaultIPGateway", "MACAddress"]
         net = self.get_values(search_class, props, {"IPEnabled": 1})
         # net = [i for i in raw_net if i['IPAddress'][0].startswith("172.20") ]
 

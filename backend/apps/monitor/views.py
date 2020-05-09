@@ -14,6 +14,8 @@ from classes.BaseHost import BaseHost
 
 from .serializers import SqlSerializer
 from .models import ConexionesSQL
+import socket
+import pyodbc
 
 
 class ActiveDirectoryMonitor(APIView):
@@ -41,3 +43,35 @@ class SqlConnections(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     serializer_class = SqlSerializer
     queryset = ConexionesSQL.objects.all()
+
+
+class DNSService(APIView):
+    def get(self, request):
+        try:
+            response = socket.gethostbyname('projectejordi.es')
+        except:
+            response = False
+        return Response(response)
+
+
+class SQLServerService(APIView):
+    def get(self, request):
+        servers = ["192.168.1.150"]
+        results = []
+        for i in servers:
+            try:
+                conn = pyodbc.connect(
+                    "Driver={ODBC Driver 17 for SQL Server};Server=%s;Database=Sistemas;UID=%s;PWD=%s" % (
+                        i,
+                        os.getenv("DB_USER"),
+                        os.getenv("DB_PASSWORD")
+                    )
+                )
+                results.append([i, True])
+            except:
+                results.append([i, False])
+        return Response([
+            ["192.168.1.150", True],
+            ["192.168.1.151", True],
+            ["192.168.1.152", False],
+        ])

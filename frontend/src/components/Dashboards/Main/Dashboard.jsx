@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import { Col, Row } from 'reactstrap'
+import React, { useEffect, useState } from 'react'
+
+import SQLStatus from '../../SqlMonitor/SQLStatus'
+import SqlConnectionsTable from '../../SqlMonitor'
 import StateCard from '../../StateCard/StateCard'
-import { Row, Col} from 'reactstrap'
+import UserStatusCard from '../../StateCard/UserStatusCard'
 import UserTable from '../../UserTable/UserTable'
 import agent from "../../../agent/agent"
+import { connect } from 'react-redux'
 import { services } from "./services"
-import SqlConnectionsTable from '../../SqlMonitor'
-import UserStatusCard from '../../StateCard/UserStatusCard'
 
 const mapStateToProps = (state) => ({
     ...state
@@ -45,6 +47,9 @@ const Dashboard = (props) => {
             <h4>Estado sistemas</h4>
             <Row>
                 {servicesStatus.length > 0 && servicesStatus} {/* STATUS TABS */}
+                <Col xs="12" sm="6" lg="3" key={"Users-" + Math.random()}>
+                    <SQLStatus/>
+                </Col>
                 <Col xs="12" sm="6" lg="3" key={"Users-" + Math.random()}>
                     <UserStatusCard/>
                 </Col>

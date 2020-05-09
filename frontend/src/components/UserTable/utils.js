@@ -1,7 +1,7 @@
-import orderBy from 'lodash/orderBy';
 import agent from "../../agent/agent"
-import toast from "toastr"
+import orderBy from 'lodash/orderBy';
 import { store } from "../../store/store"
+import toast from "toastr"
 
 // COLUMNS THAT WILL HAVE THE DATATABLE
 export const columns = [

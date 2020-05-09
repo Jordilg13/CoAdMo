@@ -1,12 +1,13 @@
+import { Badge, ListGroup, ListGroupItem, Media, Progress, Spinner, Table } from 'reactstrap';
+import { Col, Nav, NavItem, NavLink, Row, TabContent, TabPane } from 'reactstrap';
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import agent from "../../agent/agent"
-import { ListGroup, ListGroupItem, Media, Spinner, Progress, Table, Badge } from 'reactstrap';
-import logo from "../../assets/img/computer.png"
-import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
-import classnames from 'classnames';
-import { useMediaQuery } from 'react-responsive'
 
+import Actions from './Actions';
+import agent from "../../agent/agent"
+import classnames from 'classnames';
+import { connect } from 'react-redux'
+import logo from "../../assets/img/computer.png"
+import { useMediaQuery } from 'react-responsive'
 
 const mapStateToProps = state => ({ ...state });
 
@@ -36,15 +37,11 @@ const Host = (props) => {
                     setTabs_info(prevstate => { return { ...prevstate, [key]: value } })
                 })
             } else { // IF IS A SINGLE ITEM LIKE CPU OR RAM
-                console.log(category);
-
                 eval(`set${category}(data)`)
             }
-
         } else {
             setisUp(false)
             seterrors(data.msg)
-
         }
     }
 
@@ -78,18 +75,23 @@ const Host = (props) => {
         }
     }
 
-    const toggle = tab => {
-        console.log(tabs_info);
-
-        if (activeTab !== tab) setactiveTab(tab);
-    }
+    const toggle = tab => { if (activeTab !== tab) setactiveTab(tab) }
 
     retrieveData()
 
     return (
         <div>
-            <h1 style={{ "display": "inline" }}>{hostname}</h1> {errors && <Badge color="danger">{errors}</Badge>}
-
+            <Row>
+                <Col xs="10" sm="6" lg="6">
+                    <h1 style={{ "display": "inline" }}>{hostname}</h1>
+                    {/* Show errors if there are any */}
+                    {errors && <Badge color="danger">{errors}</Badge>}
+                </Col>
+                <Col xs="2" sm="3" lg="6">
+                    {/* ACTIONS */}
+                    <Actions hostname={hostname} mac={tabs_info['network'] ? tabs_info['network'][0]['MACAddress'] : []}></Actions>
+                </Col>
+            </Row>
             <Row>
                 {/* display only in desktop browser, not in mobiles */}
                 {!isDesktop && <Col xs="12" sm="6" lg="3">

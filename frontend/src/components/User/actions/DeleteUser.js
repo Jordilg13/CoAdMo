@@ -1,11 +1,9 @@
-import React from 'react'
-import { connect } from 'react-redux'
-
-// FONTAWESOME
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faTrashAlt, } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'reactstrap'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import React from 'react'
 import agent from '../../../agent/agent'
+import { connect } from 'react-redux'
+import { faTrashAlt, } from '@fortawesome/free-solid-svg-icons'
 import toastr from "toastr"
 
 const mapStateToProps = state => ({ ...state });

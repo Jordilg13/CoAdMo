@@ -2,7 +2,7 @@ import sys
 import ldap
 import pprint
 DN = "CN=Administrador,CN=Users,DC=projectejordi,DC=es"
-secret = "Pruebas1"
+secret = "xxxxxx"
 username = "bind"
 
 server = "ldap://192.168.1.150"

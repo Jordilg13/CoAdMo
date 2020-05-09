@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { updateUser } from '../../UserTable/utils'
-import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Form, FormGroup, Label, Input, Row, Col, InputGroupAddon, InputGroup, InputGroupText } from 'reactstrap';
-// FONTAWESOME
+import { Button, Col, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
+import React, { useEffect, useState } from 'react'
+import { faEye, faEyeSlash, faUserEdit, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faUserEdit, faUserPlus, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { JustifyAction } from './JustifyAction';
-
-
+import { updateUser } from '../../UserTable/utils'
 
 const UserForm = (props) => {
     // STATE
