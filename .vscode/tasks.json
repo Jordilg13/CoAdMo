@@ -4,12 +4,12 @@
         {
             "label": "backend",
             "type": "shell",
-            "command": "& d:/projects/COADMO/venv/Scripts/Activate.ps1;cd backend; py manage.py runserver 0.0.0.0:8000", // Could be any other shell command
+            "command": "& d:/projects/COADMO/venv/Scripts/Activate.ps1;cd backend; py manage.py runserver 0.0.0.0:8000",
         },
         {
             "label": "frontend",
             "type": "shell",
-            "command": "cd frontend; npm start", // Could be any other shell command
+            "command": "cd frontend; npm start",
         }
     ]
 }

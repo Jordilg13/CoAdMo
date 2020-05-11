@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import { Col, Row, Spinner } from 'reactstrap'
 
-import { Row, Col, Spinner, CardGroup, CardHeader, CardBody, Progress } from 'reactstrap'
-import UserTable from '../../UserTable/UserTable'
+import React from 'react'
 import StaticStateCard from '../../StateCard/StaticStateCard'
-import { Card } from '@material-ui/core'
+import UserTable from '../../UserTable/UserTable'
+import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({ ...state });
 

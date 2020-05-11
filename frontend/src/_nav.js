@@ -3,41 +3,29 @@ export default {
     {
       name: 'Dashboards',
       url: '/dashboard',
-      icon: 'icon-speedometer',
+      icon: 'icon-grid',
       children: [
         {
           name: 'Principal',
-          url: '/',
-          icon: 'icon-puzzle'
+          url: '/dashboard',
+          icon: 'icon-screen-desktop'
         },
         {
           name: 'Users',
           url: '/users',
-          icon: 'icon-puzzle'
+          icon: 'icon-screen-desktop'
         },
-      ]
-    },
-    {
-      name: "Samples",
-      icon: 'icon-speedometer',
-      children: [
         {
-          name: 'Host',
-          url: '/host/192.168.1.150',
-          icon: 'icon-puzzle'
-        },
-        ,
-        {
-          name: 'User',
-          url: '/user/django',
-          icon: 'icon-puzzle'
+          name: 'Hosts',
+          url: '/hosts',
+          icon: 'icon-screen-desktop'
         },
       ]
     },
     {
       name: 'Conexiones',
       url: '/db',
-      icon: 'icon-puzzle'
+      icon: 'icon-chart'
     },
   ],
 };

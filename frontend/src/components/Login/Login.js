@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+
 import { LOGIN } from "../../constants/actionTypes"
 import agent from "../../agent/agent"
-
+import { connect } from 'react-redux'
 
 const mapStateToProps = state => ({ ...state.auth });
 

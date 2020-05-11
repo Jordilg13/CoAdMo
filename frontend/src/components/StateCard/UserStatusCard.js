@@ -1,7 +1,8 @@
+import { CardBody, Collapse, Progress, Spinner } from 'reactstrap'
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { Progress, Spinner, CardBody, Collapse } from 'reactstrap'
+
 import { Card } from '@material-ui/core'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state) => ({
     ...state
@@ -46,11 +47,13 @@ const UserStatusCard = (props) => {
                 <Collapse isOpen={popoverOpen}>
                     <Card color={color} style={{ border: "none" }}>
                         <CardBody>
-                            {
-                                props.users.users ? props.users.users.filter(u => u['isBlocked']).map(u => (
-                                    <a href={`/user/${u.cn}`}>{u.cn}</a>
-                                ))
-                                    : (<Spinner size="sm" />)}
+                            <ul style={{listStyleType: "none"}}>
+                                {
+                                    props.users.users ? props.users.users.filter(u => u['isBlocked']).map(u => (
+                                        <li><a href={`/user/${u.cn}`}>{u.cn}</a></li>
+                                    ))
+                                        : (<Spinner size="sm" />)}
+                            </ul>
                         </CardBody>
                     </Card>
                 </Collapse>

@@ -2,7 +2,7 @@ import sys
 import ldap
 import pprint
 DN = "CN=Administrador,CN=Users,DC=projectejordi,DC=es"
-secret = "xxxxxx"
+secret = "Pruebas1"
 username = "bind"
 
 server = "ldap://192.168.1.150"
@@ -11,9 +11,9 @@ port = 389
 base = "dc=projectejordi,dc=es"
 scope = ldap.SCOPE_SUBTREE
 
-filterr = "(&(objectClass=user)(sAMAccountName=Aaa))"
+filterr = "(&(objectClass=computer))"
 # filterr = "(&(objectClass=user)(UserAccountControl=514))"
-attrs = ["sn"]
+attrs = ["cn"]
 
 l = ldap.initialize(server)
 l.protocol_version = 3

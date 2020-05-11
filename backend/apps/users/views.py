@@ -30,7 +30,7 @@ class AllUsers(APIView):
         host = ActiveDirectory()
 
         # all that matches with the filter
-        query_filter = "(&(objectClass=user))"
+        query_filter = "(&(objectClass=user)(!(objectClass=computer))(!(samaccountname=SM_*)))"
 
         # return the attributes that matches with the given arguments
         attrs = ["accountExpires", "cn", "displayName", "distinguishedName",
@@ -39,7 +39,7 @@ class AllUsers(APIView):
                  "employeeNumber", "sn"]
 
         # execute the query
-        users = host.search(query_filter, attrs)
+        users = host.search(query_filter, attrs, "CN=Users,")
 
         # change to a proper format
         users = utils.format_data(users)

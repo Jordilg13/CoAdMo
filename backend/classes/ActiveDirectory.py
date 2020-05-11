@@ -26,32 +26,22 @@ class ActiveDirectory():
         password = os.getenv("LDAP_PASSWORD")
 
         # SETTING UP THE CONNECTION
-        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
         l = ldap.initialize(server)
         l.protocol_version = 3
         l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_X_TLS, ldap.OPT_X_TLS_DEMAND)
-        l.set_option(ldap.OPT_X_TLS_DEMAND, True)
         l.simple_bind_s(DN, password)
 
         return l
 
     ##### MONITORING #####
-    # def get_users_by_filter(self, parameter):
-    #     command = "Search-ADAccount -{0} -Credential $credential | select samaccountname | ft -HideTableHeaders".format(parameter)
-
-    #     return self.ps.execute(command)
-
-    def search(self, ldap_filter, attrs):
+    def search(self, ldap_filter, attrs, ou=""):
         """
         Executes a query against the ldap server with the input parameters.
         INPUT:
         - ldap_filter: the query string -> "(&(objectClass=user))"
         - attrs: the attributes that will return the query -> ["sammaccountname"]
         """
-        l_filter = ldap_filter
-        attrs = attrs
-        result = self.conn.search(self.base, self.scope, l_filter, attrs)
+        result = self.conn.search(ou+self.base, self.scope, ldap_filter, attrs)
         typee, users = self.conn.result(result, 60)
 
         return users

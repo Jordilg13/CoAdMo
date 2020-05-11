@@ -41,7 +41,9 @@ const Host = {
     shutdown: (hostname) =>
         requests.get(`/host/${hostname}/shutdown`),
     restart: (hostname) =>
-        requests.get(`/host/${hostname}/restart`)
+        requests.get(`/host/${hostname}/restart`),
+    getAll: () => 
+        requests.get("/host/all")
 }
 
 

@@ -70,8 +70,5 @@ class SQLServerService(APIView):
                 results.append([i, True])
             except:
                 results.append([i, False])
-        return Response([
-            ["192.168.1.150", True],
-            ["192.168.1.151", True],
-            ["192.168.1.152", False],
-        ])
+
+        return Response(results)

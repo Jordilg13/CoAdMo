@@ -99,6 +99,7 @@ function UserTable(props) {
             })
             // updates the state with the fformatted data
             setusers(users)
+            console.log("UserTable -> users", users)
             setpending(false);
         }
     }, [props.users.users])

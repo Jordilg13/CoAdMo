@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+import { DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, UncontrolledDropdown } from 'reactstrap';
 import { Link, NavLink } from 'react-router-dom';
-import {  UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
-import {  AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/brand/big_logo_coadmo.png'
-import sygnet from '../../assets/img/brand/small_logo_coadmo.png'
+import JwtDecode from 'jwt-decode';
+import PropTypes from 'prop-types';
 import agent from "../../agent/agent"
 import { connect } from 'react-redux'
-import JwtDecode from 'jwt-decode';
+import logo from '../../assets/img/brand/big_logo_coadmo.png'
+import sygnet from '../../assets/img/brand/small_logo_coadmo.png'
 import toast from "toastr"
 
 const propTypes = {
@@ -47,7 +47,6 @@ class DefaultHeader extends Component {
       let decoded = JwtDecode(token)
 
       if (this.isTokenExpired(decoded['exp'])) {
-        console.log("LOGING OUT");
         this.props.logout()
         this.props.redirectTo("/login")
       } else {
@@ -55,14 +54,12 @@ class DefaultHeader extends Component {
       }
 
     } else {
-      console.log("LOGING OUT");
-      this.props.logout()
       this.props.redirectTo("/login")
-      toast.error("Inicia sesión para ver este contenido.","Error")
+      toast.error("Inicia sesión para ver este contenido.", "Error")
     }
 
   }
-  
+
   // check if the token is expired
   isTokenExpired = (sec) => {
     let exp_date = new Date(sec).getTime()
@@ -101,21 +98,23 @@ class DefaultHeader extends Component {
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
-        <AppNavbarBrand
-          full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
-          minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
-        />
+        <a href="/">
+          <AppNavbarBrand
+            full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
+            minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
+          />
+        </a>
         <AppSidebarToggler className="d-md-down-none" display="lg" />
 
         <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
-            <NavLink to="/dashboard" className="nav-link" >Dashboard</NavLink>
+            <NavLink to="/dashboard" className="nav-link" >General</NavLink>
           </NavItem>
           <NavItem className="px-3">
             <Link to="/users" className="nav-link">Users</Link>
           </NavItem>
           <NavItem className="px-3">
-            <NavLink to="#" className="nav-link">Settings</NavLink>
+            <NavLink to="/hosts" className="nav-link">Hosts</NavLink>
           </NavItem>
         </Nav>
         <Nav className="ml-auto" navbar>

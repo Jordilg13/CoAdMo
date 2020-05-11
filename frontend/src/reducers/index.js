@@ -1,13 +1,19 @@
+import auth from './auth';
 import { combineReducers } from 'redux';
+import common from './common';
+import hosts from './hosts';
+import users from './users';
 
 // reducers
-import auth from './auth';
-import common from './common';
-import users from './users';
+
+
+
+
 
 export default combineReducers({
   auth,
   common,
   users,
+  hosts,
   // router: routerReducer
 });

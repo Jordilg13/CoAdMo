@@ -2,11 +2,10 @@
 //     ASYNC_START,
 //     ASYNC_END
 //   } from '../constants/actionTypes';
-import { push } from 'react-router-redux';
+
 import agent from "../agent/agent"
+import { push } from 'react-router-redux';
 import toastr from 'toastr'
-
-
 
 // Promise middleware, sets the state in progress while the promise is not solved
 const promiseMiddleware = store => next => action => {
@@ -70,8 +69,8 @@ const localStorageMiddleware = store => next => action => {
   next(action);
 };
 
-const usersMiddleware = store => next => action => {
-  if (action.type === "GET_USERS") {
+const dataTableMiddleware = store => next => action => {
+  if (action.type === "GET_USERS" || action.type === "GET_HOSTS") {
 
     if (isPromise(action.payload)) {
       action.payload.then(
@@ -100,4 +99,4 @@ function isPromise(v) {
 }
 
 
-export { promiseMiddleware, localStorageMiddleware, usersMiddleware }
+export { promiseMiddleware, localStorageMiddleware, dataTableMiddleware }

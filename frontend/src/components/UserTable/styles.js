@@ -1,7 +1,6 @@
-import styled from 'styled-components';
 import { Button } from 'reactstrap';
 import { makeStyles } from '@material-ui/core/styles';
-
+import styled from 'styled-components';
 
 export const TextField = styled.input`
   height: 32px;
@@ -24,7 +23,7 @@ export const ClearButton = styled(Button)`
   border-bottom-left-radius: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-  height: 34px;
+  height: 32px;
   width: 32px;
   text-align: center;
   display: flex;

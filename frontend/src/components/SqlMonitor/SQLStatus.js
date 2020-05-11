@@ -13,6 +13,8 @@ export const SQLStatus = (props) => {
 
     // resolve the promise
     useEffect(() => {
+        console.log("-asdasd----");
+        
         agent.Services.getDefault("sqlhc").then(data => {
             console.log("SQLStatus -> data", data)
             let allServersOk = data.every(s => s[1] == true)

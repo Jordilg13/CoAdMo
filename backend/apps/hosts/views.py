@@ -1,10 +1,15 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from classes.BaseHost import BaseHost
 import os
+import sys
+
+import ldap
 import wmi
+from django.shortcuts import render
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from classes.ActiveDirectory import ActiveDirectory
+from classes.BaseHost import BaseHost
 
 
 class Host(APIView):
@@ -42,5 +47,25 @@ class Host(APIView):
             parameter: getattr(host, parameter)()
         }
 
-
         return Response(response)
+
+
+class Hosts(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        # new basehost with his monitor operations
+        host = ActiveDirectory()
+
+        # all that matches with the filter
+        query_filter = "(&(objectClass=computer))"
+
+        attrs = ["name"]
+
+        # execute the query
+        computers = host.search(query_filter, attrs)
+
+        # change to a proper format
+        computers = [i[1]['name'][0] for i in computers if isinstance(i[1],dict)]
+
+        return Response(computers)
