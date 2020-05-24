@@ -45,12 +45,12 @@ const UserStatusCard = (props) => {
                 </CardBody>
                 <div className="card_footer" />
                 <Collapse isOpen={popoverOpen}>
-                    <Card color={color} style={{ border: "none" }}>
+                    <Card className={"bg-" + color} style={{ border: "none" }}>
                         <CardBody>
-                            <ul style={{listStyleType: "none"}}>
+                            <ul style={{ listStyleType: "none", position: "relative", left: "-35px" }}>
                                 {
                                     props.users.users ? props.users.users.filter(u => u['isBlocked']).map(u => (
-                                        <li><a href={`/user/${u.cn}`}>{u.cn}</a></li>
+                                        <li><a href={`/user/${u.cn}`} style={{ color: "white", left: "-50px" }}>{u.cn}</a></li>
                                     ))
                                         : (<Spinner size="sm" />)}
                             </ul>

@@ -54,7 +54,7 @@ const Actions = (props) => {
                     {!isDesktop ? "Acciones" : <FontAwesomeIcon icon={faPowerOff} size="sm" />}
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem onClick={() => wakeOnLan(props.mac)} disabled={props.mac.length == 0}>Encender</DropdownItem>
+                    <DropdownItem onClick={() => wakeOnLan(props.mac)} disabled={true}>Encender</DropdownItem>
                     <DropdownItem onClick={() => confirm("shutdown")}>Apagar</DropdownItem>
                     <DropdownItem onClick={() => confirm("restart")}>Reiniciar</DropdownItem>
                 </DropdownMenu>

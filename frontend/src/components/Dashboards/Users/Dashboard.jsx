@@ -21,6 +21,7 @@ const Dashboard = (props) => {
 
     return (
         <div>
+            <h1>Usuarios</h1>
             <Row>
                 <Col xs="6" sm="6" lg="6">
                     <StaticStateCard
@@ -28,6 +29,7 @@ const Dashboard = (props) => {
                         description={props.users.users ? countUsers("isBlocked") : (<Spinner size="sm" />)}
                         color="danger"
                         po_desc=""
+                        expand={false}
                     />
 
                 </Col>
@@ -37,6 +39,7 @@ const Dashboard = (props) => {
                         description={props.users.users ? countUsers("isExpired") : (<Spinner size="sm" />)}
                         color="warning"
                         po_desc=""
+                        expand={false}
                     />
                 </Col>
 

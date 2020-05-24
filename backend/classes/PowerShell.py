@@ -44,6 +44,7 @@ class PowerShell():
             command = self.credentials+command+" -Credential $credential"
 
         # execute command in a new process
+        print(command)
         e = subprocess.Popen(
             ['powershell.exe', '-command', command], stdout=subprocess.PIPE)
 

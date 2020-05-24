@@ -87,9 +87,9 @@ const UserForm = (props) => {
                                 </FormGroup>
                             </Col>
                             <Col xs="12" sm="6" lg="6" hidden={isUpdate}>
-                                <Label for="Password">Password</Label>
+                                <Label for="Password">Contraseña</Label>
                                 <InputGroup>
-                                    <Input type={showPassword ? "text" : "password"} name="Password" id="Password" placeholder="Password" required disabled={isUpdate} />
+                                    <Input type={showPassword ? "text" : "password"} name="Password" id="Password" placeholder="Contraseña" required disabled={isUpdate} />
                                     <InputGroupAddon addonType="append" style={{ cursor: "pointer" }} onClick={() => setshowPassword(!showPassword)}>
                                         <InputGroupText >
                                             {
@@ -113,10 +113,10 @@ const UserForm = (props) => {
                 <ModalFooter>
 
                     <Button form="create-user-form" color="primary" type="submit">
-                        {isUpdate ? "Update" : "Justify"}
+                        {isUpdate ? "Actualizar" : "Justificar"}
                     </Button>{' '}
                     {/* <Button form="create-user-form" color="primary" type="submit">{isUpdate ? "Update" : "Create"}</Button>{' '} */}
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button color="secondary" onClick={toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         </div>

@@ -76,6 +76,15 @@ const Host = (props) => {
     }
 
     const toggle = tab => { if (activeTab !== tab) setactiveTab(tab) }
+    const allIPAddreses = () => {
+        let a = tabs_info && tabs_info.network.map(a => {
+            console.log("allIPAddreses -> a", a)
+            return a
+        })
+        console.log("allIPAddreses -> a", a)
+
+        return "asdf"
+    }
 
     retrieveData()
 
@@ -84,6 +93,7 @@ const Host = (props) => {
             <Row>
                 <Col xs="10" sm="6" lg="6">
                     <h1 style={{ "display": "inline" }}>{hostname}</h1>
+                    <h4 className="text-muted">{ tabs_info.network && tabs_info.network.map(e => e.IPAddress).join(" - ")}</h4>
                     {/* Show errors if there are any */}
                     {errors && <Badge color="danger">{errors}</Badge>}
                 </Col>

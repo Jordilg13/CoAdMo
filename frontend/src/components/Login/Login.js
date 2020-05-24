@@ -59,7 +59,7 @@ class Login extends Component {
                           autoFocus
                           id="username"
                           name="username"
-                          placeholder="Username"
+                          placeholder="Usuario"
                           // autoComplete="username"
                           required
                           value={this.state.username}
@@ -74,7 +74,7 @@ class Login extends Component {
                         </InputGroupAddon>
                         <Input
                           type="password"
-                          placeholder="Password"
+                          placeholder="Contraseña"
                           id="password"
                           name="password"
                           // autoComplete="current-password"

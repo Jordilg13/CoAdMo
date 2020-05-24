@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { Row, Col, Media, ListGroup, ListGroupItem, Spinner, Tooltip, Badge  } from "reactstrap"
-import { useMediaQuery } from 'react-responsive'
-import logo from "../../assets/img/default-avatar.png"
-import agent from "../../agent/agent"
+import { Badge, ButtonGroup, Col, ListGroup, ListGroupItem, Media, Row, Spinner, Tooltip } from "reactstrap"
+import React, { useEffect, useState } from 'react'
+
+import DeleteUser from "./actions/DeleteUser"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import UnlockUser from "./actions/UnlockUser"
+import UserForm from "./actions/UserForm"
+import agent from "../../agent/agent"
+import { connect } from 'react-redux'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import logo from "../../assets/img/default-avatar.png"
+import { useMediaQuery } from 'react-responsive'
 
 const User = (props) => {
     const username = props.match.params.username;
@@ -38,7 +42,8 @@ const User = (props) => {
                     <Media
                         className="img-fluid rounded mx-auto d-block"
                         src={userInfo && userInfo.db.foto ? "data:image/png;base64," + userInfo.db.foto : logo}
-                        alt="User Image" />
+                        alt="User Image" 
+                        style={{"marginLeft": "400px"}}/>
                 </Col>}
                 <Col>
                     <h1 style={{ "display": "inline" }}>
@@ -46,6 +51,11 @@ const User = (props) => {
                             <Spinner color="primary" size="sm" />
                         )}
                     </h1>
+                    <ButtonGroup className="pull-right">   
+                        {userInfo.ad?.isBlocked && <UnlockUser user={userInfo ? userInfo.ad: {"cn":"","distinguishedName":""}} />}
+                        <UserForm action="update" user={userInfo ? userInfo.ad: {"cn":"","distinguishedName":""}} />
+                        <DeleteUser user={userInfo ? userInfo.ad: {"cn":"","distinguishedName":""}} />
+                    </ButtonGroup>
                     {
                         userInfo.errors && (<>
                             <Badge color="danger" size="lg">
@@ -92,7 +102,7 @@ const User = (props) => {
                         <Col>
                             {/* WHERE AND WHEN THE USER LOGGED IN LAST TIME */}
                             <ListGroup flush>
-                                <ListGroupItem><b>Equipo: </b>{userInfo ? (<a href={`/host/${userInfo.db.equipo}`}>{userInfo.db.equipo}</a>) : (
+                                <ListGroupItem><b>Equipo: </b>{userInfo ? (<a href={`/host/WIN-ND355NATD61`}>WIN-ND355NATD61</a>) : (
                                     <Spinner color="primary" size="sm" />
                                 )}</ListGroupItem>
                                 <ListGroupItem><b>Último inicio sesión: </b>{userInfo ? (userInfo.db.aperturapuesto && userInfo.db.aperturapuesto.replace("T", " ")) : (
@@ -119,7 +129,6 @@ const User = (props) => {
                             </ListGroup>
                         </Col>
                     </Row>
-
                 </Col>
             </Row>
         </div>

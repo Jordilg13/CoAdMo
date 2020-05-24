@@ -1,6 +1,7 @@
 import os
 import sys
 
+import random
 import ldap
 import wmi
 from django.shortcuts import render
@@ -44,6 +45,8 @@ class SqlConnections(viewsets.ModelViewSet):
     serializer_class = SqlSerializer
     queryset = ConexionesSQL.objects.all()
 
+# NOT IMPLEMENTED
+
 
 class DNSService(APIView):
     def get(self, request):
@@ -72,3 +75,4 @@ class SQLServerService(APIView):
                 results.append([i, False])
 
         return Response(results)
+        

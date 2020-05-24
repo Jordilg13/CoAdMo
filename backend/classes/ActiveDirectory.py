@@ -15,6 +15,7 @@ class ActiveDirectory():
         # super().__init__(self, os.getenv("LDAP_IP"))
         self.conn = self.setup()
         self.base = os.getenv("DOMAIN")
+        self.baseUsers = os.getenv("USERS_DOMAIN")
         self.scope = ldap.SCOPE_SUBTREE
         self.PASSWORD_EXPIRATION_DATE = datetime.timedelta(days=45)
 
@@ -71,7 +72,7 @@ class ActiveDirectory():
             data['sn'],
             data['sAMAccountName'],
             data['userPrincipalName'],
-            self.base,
+            self.baseUsers,
             data['Password']
         )
         return conn.execute(command)

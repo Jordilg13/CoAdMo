@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import {
   Badge,
   Button,
@@ -13,9 +12,9 @@ import {
   DropdownToggle,
   Fade,
   Form,
+  FormFeedback,
   FormGroup,
   FormText,
-  FormFeedback,
   Input,
   InputGroup,
   InputGroupAddon,
@@ -24,6 +23,7 @@ import {
   Label,
   Row,
 } from 'reactstrap';
+import React, { Component } from 'react';
 
 class Forms extends Component {
   constructor(props) {
@@ -1144,7 +1144,7 @@ class Forms extends Component {
                       </FormGroup>
                       <div className="form-actions">
                         <Button type="submit" color="primary">Save changes</Button>
-                        <Button color="secondary">Cancel</Button>
+                        <Button color="secondary">Cancelar</Button>
                       </div>
                     </Form>
                   </CardBody>

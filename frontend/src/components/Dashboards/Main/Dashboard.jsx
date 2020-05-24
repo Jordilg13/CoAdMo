@@ -59,7 +59,7 @@ const Dashboard = (props) => {
                     <SqlConnectionsTable />
                 </Col>
 
-                <Col xs="12" sm="12" lg="12" style={{ marginTop: "20px" }}>
+                <Col xs="12" sm="6" lg="6" style={{ marginTop: "20px" }}>
                     <UserTable filtered_users={true} />
                 </Col>
 

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Collapse, Spinner } from 'reactstrap';
 import "./styles.css"
-import toastr from "toastr"
 
+import { Card, CardBody, Collapse, Spinner } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+
+import toastr from "toastr"
 
 // COLORS: primary, secondary, success, danger, warning, info, light, dark
 export const StaticStateCard = (props) => {
@@ -16,7 +17,7 @@ export const StaticStateCard = (props) => {
                     <div>{props.description}</div>
                 </CardBody>
                 <div className="card_footer" />
-                <Collapse isOpen={popoverOpen}>
+                <Collapse isOpen={props.expand ? popoverOpen : false}>
                     <Card color={props.color} style={{ border: "none" }}>
                         <CardBody>{props.po_desc}</CardBody>
                     </Card>

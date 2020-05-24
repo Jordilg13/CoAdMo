@@ -41,8 +41,7 @@ class Host(APIView):
         # then the response will be { "cpu_usage": host.cpu_usage() }
         # resolving it, { "cpu_usage": "0" }
 
-        # TODO: change this because it makes no sense send the parameter name
-        # cause when u do the request, u know what are expecting ffor
+
         response = {
             parameter: getattr(host, parameter)()
         }

@@ -1,8 +1,7 @@
+import { Button, Col, Form, FormGroup, Input, InputGroup, InputGroupAddon, InputGroupText, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import React, { useState } from 'react'
+
 import { createUser } from '../../UserTable/utils'
-import { Button, Modal, ModalHeader, ModalFooter, ModalBody, Form, FormGroup, Label, Input, Row, Col, InputGroupAddon, InputGroup, InputGroupText } from 'reactstrap';
-
-
 
 export const JustifyAction = (props) => {
     const toggle = props.toggle
@@ -35,8 +34,8 @@ export const JustifyAction = (props) => {
                     </Form>
                 </ModalBody>
                 <ModalFooter>
-                    <Button form="justify-user-form" color="primary" type="submit">Create</Button>{' '}
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                    <Button form="justify-user-form" color="primary" type="submit">Crear</Button>{' '}
+                    <Button color="secondary" onClick={toggle}>Cancelar</Button>
                 </ModalFooter>
             </Modal>
         </div>
