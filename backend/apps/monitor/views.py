@@ -48,13 +48,13 @@ class SqlConnections(viewsets.ModelViewSet):
 # NOT IMPLEMENTED
 
 
-class DNSService(APIView):
-    def get(self, request):
-        try:
-            response = socket.gethostbyname('projectejordi.es')
-        except:
-            response = False
-        return Response(response)
+# class DNSService(APIView):
+#     def get(self, request):
+#         try:
+#             response = socket.gethostbyname('projectejordi.es')
+#         except:
+#             response = False
+#         return Response(response)
 
 
 class SQLServerService(APIView):
