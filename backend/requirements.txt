@@ -1,0 +1,45 @@
+# ========================================
+# COADMO Backend Dependencies
+# Python 3.8+ required
+# Windows environment required for WMI functionality
+# ========================================
+
+# Core Framework
+Django==3.0.4
+djangorestframework==3.11.0
+
+# Database
+# IMPORTANT: Requires ODBC Driver 17 for SQL Server installed on Windows
+# Download from: https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server
+mssql-django==1.0
+pyodbc==4.0.30
+
+# LDAP/Active Directory
+django-auth-ldap==2.1.1
+python-ldap==3.2.0
+
+# Authentication
+PyJWT==1.7.1
+
+# Environment variables
+python-dotenv==0.13.0
+
+# CORS
+django-cors-headers==3.2.1
+
+# Windows Management Instrumentation (WMI)
+# IMPORTANT: Only works on Windows
+pywin32==227
+WMI==1.5.1
+
+# Network utilities
+pythonping==1.0.15
+
+# ========================================
+# INSTALLATION NOTES:
+# ========================================
+# 1. Install Python 3.8+ for Windows
+# 2. Install Microsoft ODBC Driver 17 for SQL Server
+# 3. Run: pip install -r requirements.txt
+# 4. Configure .env file (see .env.example)
+# ========================================

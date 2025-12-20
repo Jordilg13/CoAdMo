@@ -16,7 +16,12 @@ from django_auth_ldap.config import LDAPSearch, NestedActiveDirectoryGroupType
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
-DEBUG = True
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv('SECRET_KEY', 'z(+c(lj8+vpt_=@zj*s+4tp8&*u75!%h_+0605y8jov(zfay!j')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 
 # Binding and connection options
@@ -72,12 +77,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z(+c(lj8+vpt_=@zj*s+4tp8&*u75!%h_+0605y8jov(zfay!j'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
-ALLOWED_HOSTS = ["*"]
+# Parse ALLOWED_HOSTS from comma-separated string
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', '*').split(',')]
 
 
 # Application definition
@@ -138,18 +139,19 @@ WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': 'Sistemas',
+        'ENGINE': 'mssql',
+        'NAME': os.getenv("DB_NAME", "Sistemas"),
         'USER': os.getenv("DB_USER"),
         'PASSWORD': os.getenv("DB_PASSWORD"),
         'HOST': os.getenv("DB_HOST"),
-        'PORT': 1433,
+        'PORT': os.getenv("DB_PORT", "1433"),
 
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         },
     },
 
+    # Alternative SQLite configuration for development (uncomment if needed)
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
